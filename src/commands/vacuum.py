@@ -28,7 +28,7 @@ class Vacuum(Command):
 
     def isFinished(self):
         """Returns true when the Command no longer needs to be run"""
-        if self.isTimedOut()
+        if self.isTimedOut():
             return True
         return False
 
