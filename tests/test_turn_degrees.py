@@ -1,4 +1,4 @@
-from commands1 import Command
+from commands2 import Command
 import pytest
 from wpilib import IterativeRobotBase
 from commands.turn_degrees import TurnDegrees

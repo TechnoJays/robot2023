@@ -2,7 +2,7 @@ import configparser
 from typing import Optional
 
 from wpilib import IterativeRobotBase, PWMMotorController, PWMVictorSPX, SmartDashboard
-from commands1 import Subsystem
+from commands2 import Subsystem
 from commands.do_nothing_shooter import DoNothingShooter
 from commands.shooter_drive import ShooterDrive
 

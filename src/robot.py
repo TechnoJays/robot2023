@@ -1,8 +1,8 @@
 import wpilib
 from wpilib import SmartDashboard
 
-from commands1 import Command
-from commands1 import Scheduler
+from commands2 import Command
+from commands2 import CommandScheduler
 from oi import OI
 from subsystems.climbing import Climbing
 from subsystems.drivetrain import Drivetrain

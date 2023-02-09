@@ -1,4 +1,4 @@
-from commands1 import Command
+from commands2 import Command
 from wpilib import IterativeRobotBase
 from util.stopwatch import Stopwatch
 

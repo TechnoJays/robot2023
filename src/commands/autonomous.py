@@ -1,7 +1,7 @@
 from configparser import ConfigParser
 
-from commands1 import CommandGroup
-from commands1 import WaitCommand
+from commands2 import CommandGroup
+from commands2 import WaitCommand
 from wpilib import IterativeRobotBase
 
 from commands.drive_time import DriveTime

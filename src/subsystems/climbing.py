@@ -3,7 +3,7 @@ import configparser
 from wpilib import DigitalInput, IterativeRobotBase
 from wpilib import PWMTalonSRX
 from wpilib import SmartDashboard
-from commands1 import Subsystem
+from commands2 import Subsystem
 
 from commands.move_winch import MoveWinch
 

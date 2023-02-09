@@ -3,7 +3,7 @@ import configparser
 from wpilib import SmartDashboard
 from wpilib import Solenoid
 from wpilib import PneumaticsModuleType
-from commands1 import Subsystem
+from commands2 import Subsystem
 
 from commands.lower_shooter import LowerShooter
 

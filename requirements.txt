@@ -4,7 +4,7 @@
 --pre
 wpilib
 robotpy
-robotpy[commands]
+robotpy[commands2]
 robotpy-wpimath
 robotpy-wpiutil
 opencv-python
