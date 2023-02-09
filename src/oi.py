@@ -6,7 +6,7 @@ from wpilib import DriverStation, IterativeRobotBase
 from wpilib import Joystick
 from wpilib import SendableChooser
 from wpilib import SmartDashboard
-from commands2 import CommandGroup
+from commands2 import CommandGroupBase
 from commands2.buttons import JoystickButton
 
 from commands.autonomous import DeadReckoningScore, MoveFromLine, ShootScore

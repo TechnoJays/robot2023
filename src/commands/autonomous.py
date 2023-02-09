@@ -1,6 +1,6 @@
 from configparser import ConfigParser
 
-from commands2 import CommandGroup
+from commands2 import CommandGroupBase
 from commands2 import WaitCommand
 from wpilib import IterativeRobotBase
 
