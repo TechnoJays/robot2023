@@ -31,5 +31,5 @@ class DoNothing(Command):
         """Called when another command which requires one or more of the same subsystems is scheduled to run"""
         pass
 
-    def getRequirements(self) -> typing.Set[Subsystem]:
+    def getRequirements(self) -> Set[Subsystem]:
         return {}

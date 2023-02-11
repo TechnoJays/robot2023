@@ -63,5 +63,5 @@ class TurnDegreesAbsolute(Command):
         """Based on the degrees left, returns -1 for turn right, returns 1 for turn left"""
         return 1.0 if degrees_left >= 0 else -1.0
     
-    def getRequirements(self) -> typing.Set[Subsystem]:
+    def getRequirements(self) -> Set[Subsystem]:
         return {self.robot.drivetrain}

@@ -33,5 +33,5 @@ class LowerShooter(Command):
         """Called when another command which requires one or more of the same subsystems is scheduled to run"""
         self.end()
     
-    def getRequirements(self) -> typing.Set[Subsystem]:
+    def getRequirements(self) -> Set[Subsystem]:
         return {self.robot.shooter}
