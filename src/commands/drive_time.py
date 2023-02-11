@@ -8,6 +8,7 @@ class DriveTime(Command):
     _stopwatch: Stopwatch = None
     _duration: float = None
     _speed: float = None
+    _robot: IterativeRobotBase = None
 
     def __init__(
         self,
@@ -21,7 +22,7 @@ class DriveTime(Command):
         super().__init__()
         self.setName(name)
         self.withTimeout(timeout)
-        self.robot = robot
+        self._robot = robot
         self.requires(robot.drivetrain)
         self._stopwatch = Stopwatch()
         self._duration = duration
@@ -51,4 +52,4 @@ class DriveTime(Command):
         self.end()
     
     def getRequirements(self) -> set[Subsystem]:
-        return {self.robot.drivetrain}
+        return {self._robot.drivetrain}

@@ -5,6 +5,8 @@ from wpilib import IterativeRobotBase
 from commands2 import Subsystem
 
 class TurnDegreesAbsolute(Command):
+    _robot: IterativeRobotBase = None
+
     _speed: float = None
     _degree_threshold: float = None
     _target_degrees: float = None
@@ -22,7 +24,7 @@ class TurnDegreesAbsolute(Command):
         super().__init__()
         self.setName(name)
         self.withTimeout(timeout)
-        self.robot = robot
+        self._robot = robot
         self.requires(robot.drivetrain)
         self._target_degrees = degrees_target
         self._speed = speed
@@ -64,4 +66,4 @@ class TurnDegreesAbsolute(Command):
         return 1.0 if degrees_left >= 0 else -1.0
     
     def getRequirements(self) -> set[Subsystem]:
-        return {self.robot.drivetrain}
+        return {self._robot.drivetrain}

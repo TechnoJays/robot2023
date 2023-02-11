@@ -4,6 +4,8 @@ from oi import JoystickAxis, UserController, JoystickButtons
 from commands2 import Subsystem
 
 class TankDrive(Command):
+    _robot: IterativeRobotBase = None
+
     _dpad_scaling: float
     _stick_scaling: float
 
@@ -33,7 +35,7 @@ class TankDrive(Command):
         super().__init__()
         self.setName(name)
         self.withTimeout(timeout)
-        self.robot = robot
+        self._robot = robot
         self.requires(robot.drivetrain)
         self._dpad_scaling = dpad_scaling
         self._stick_scaling = modifier_scaling
@@ -80,4 +82,4 @@ class TankDrive(Command):
         pass
     
     def getRequirements(self) -> set[Subsystem]:
-        return {self.robot.drivetrain}
+        return {self._robot.drivetrain}

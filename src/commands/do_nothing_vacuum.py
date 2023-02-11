@@ -13,7 +13,7 @@ class DoNothingVacuum(Command):
         super().__init__()
         self.setName(name)
         self.withTimeout(timeout)
-        self.robot = robot
+        self._robot = robot
         self.requires(robot.vacuum)
 
     def initialize(self):
@@ -38,4 +38,4 @@ class DoNothingVacuum(Command):
         self.end()
 
     def getRequirements(self) -> set[Subsystem]:
-        return {self.robot.vacuum}
+        return {self._robot.vacuum}

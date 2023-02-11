@@ -4,6 +4,8 @@ from commands2 import Subsystem
 
 
 class DoNothingShooter(Command):
+    _robot: IterativeRobotBase = None
+
     def __init__(
         self,
         robot: IterativeRobotBase,
@@ -11,7 +13,7 @@ class DoNothingShooter(Command):
         timeout: int = 15,
     ):
         super().__init__()
-        self.robot = robot
+        self._robot = robot
         self.setName(name)
         self.withTimeout(timeout)
         self.requires(robot.shooter)
@@ -38,4 +40,4 @@ class DoNothingShooter(Command):
         self.end()
 
     def getRequirements(self) -> set[Subsystem]:
-        return { self.robot.shooter }
+        return { self._robot.shooter }

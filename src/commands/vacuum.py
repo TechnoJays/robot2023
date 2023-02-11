@@ -4,6 +4,7 @@ from commands2 import Subsystem
 
 class Vacuum(Command):
     _speed: float = None
+    _robot: IterativeRobotBase = None
 
     def __init__(
         self,
@@ -15,7 +16,7 @@ class Vacuum(Command):
         super().__init__()
         self.setName(name)
         self.withTimeout(timeout)
-        self.robot = robot
+        self._robot = robot
         self._speed = speed
         self.requires(robot.vacuum)
 
@@ -43,4 +44,4 @@ class Vacuum(Command):
         self.end()
     
     def getRequirements(self) -> set[Subsystem]:
-        return {self.robot.vacuum}
+        return {self._robot.vacuum}

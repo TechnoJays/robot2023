@@ -7,6 +7,8 @@ from commands2 import Subsystem
 class VacuumDrive(Command):
     _dpad_scaling: float
     _stick_scaling: float
+    _robot: IterativeRobotBase = None
+
 
     def __init__(
         self,
@@ -19,7 +21,7 @@ class VacuumDrive(Command):
         super().__init__()
         self.setName(name)
         self.withTimeout(timeout)
-        self.robot = robot
+        self._robot = robot
         self.requires(robot.vacuum)
         self._dpad_scaling = dpad_scaling
         self._stick_scaling = modifier_scaling
@@ -50,4 +52,4 @@ class VacuumDrive(Command):
         self.end()
     
     def getRequirements(self) -> set[Subsystem]:
-        return {self.robot.vacuum}
+        return {self._robot.vacuum}

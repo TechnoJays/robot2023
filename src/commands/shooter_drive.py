@@ -6,6 +6,8 @@ from oi import JoystickAxis, JoystickButtons, UserController
 
 
 class ShooterDrive(Command):
+    _robot: IterativeRobotBase = None
+
     _dpad_scaling: float
     _stick_scaling: float
 
@@ -20,7 +22,7 @@ class ShooterDrive(Command):
         super().__init__()
         self.setName(name)
         self.withTimeout(timeout)
-        self.robot = robot
+        self._robot = robot
         self.requires(robot.shooter)
         self._dpad_scaling = dpad_scaling
         self._stick_scaling = modifier_scaling
@@ -51,4 +53,4 @@ class ShooterDrive(Command):
         self.end()
     
     def getRequirements(self) -> set[Subsystem]:
-        return {self.robot.shooter}
+        return {self._robot.shooter}

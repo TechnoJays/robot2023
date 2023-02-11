@@ -1,15 +1,18 @@
 from commands2 import Command
+from wpilib import IterativeRobotBase
 from oi import UserController, JoystickAxis
 from commands2 import Subsystem
 
 
 class MoveWinch(Command):
+    _robot: IterativeRobotBase = None
+
     def __init__(self, robot, name=None, timeout=15):
         """Constructor"""
         super().__init__()
         self.setName(name)
         self.withTimeout(timeout)
-        self.robot = robot
+        self._robot = robot
         self.requires(robot.climbing)
 
     def initialize(self):
@@ -35,4 +38,4 @@ class MoveWinch(Command):
         self.end()
     
     def getRequirements(self) -> set[Subsystem]:
-        return {self.robot.climbing}
+        return {self._robot.climbing}

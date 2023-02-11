@@ -4,6 +4,8 @@ from commands2 import Subsystem
 
 
 class FullWinchRetraction(Command):
+    _robot: IterativeRobotBase = None
+
     def __init__(
         self,
         robot: IterativeRobotBase,
@@ -15,7 +17,7 @@ class FullWinchRetraction(Command):
         super().__init__()
         self.setName(name)
         self.withTimeout(timeout)
-        self.robot = robot
+        self._robot = robot
         self._climb_speed: float = speed
         self.requires(robot.climbing)
 
@@ -41,4 +43,4 @@ class FullWinchRetraction(Command):
         self.end()
 
     def getRequirements(self) -> set[Subsystem]:
-        return {self.robot.climbing}
+        return {self._robot.climbing}

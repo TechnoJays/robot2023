@@ -4,6 +4,8 @@ from commands2 import Subsystem
 
 
 class Shoot(Command):
+    _robot: IterativeRobotBase = None
+
     _speed: float = None
 
     def __init__(
@@ -16,7 +18,7 @@ class Shoot(Command):
         super().__init__()
         self.setName(name)
         self.withTimeout(timeout)
-        self.robot = robot
+        self._robot = robot
         self._speed = speed
         self.requires(robot.shooter)
 
@@ -47,4 +49,4 @@ class Shoot(Command):
         self.end()
     
     def getRequirements(self) -> set[Subsystem]:
-        return {self.robot.shooter}
+        return {self._robot.shooter}
