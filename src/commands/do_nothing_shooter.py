@@ -9,8 +9,10 @@ class DoNothingShooter(Command):
         name: str = "DoNothingShooter",
         timeout: int = 15,
     ):
-        super().__init__(name, timeout)
+        super().__init__()
         self.robot = robot
+        self.setName(name)
+        self.withTimeout(timeout)
         self.requires(robot.shooter)
 
     def initialize(self):
@@ -33,3 +35,6 @@ class DoNothingShooter(Command):
     def interrupted(self):
         """Called when another command which requires one or more of the same subsystems is scheduled to run"""
         self.end()
+
+    def getRequirements(self) -> typing.Set[Subsystem]:
+        return { self.robot.shooter }

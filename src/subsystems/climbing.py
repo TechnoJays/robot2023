@@ -37,7 +37,9 @@ class Climbing(SubsystemBase):
         self._config.read(configfile)
         self._init_components()
         self._update_smartdashboard_sensors()
-        super().__init__(name)
+        self.setName(name)
+        super().__init__()
+        
 
     def _init_components(self):
         self._max_speed = self._config.getfloat(

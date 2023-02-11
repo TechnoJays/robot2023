@@ -20,7 +20,9 @@ class TurnDegrees(Command):
         timeout: int = 15,
     ):
         """Constructor"""
-        super().__init__(name, timeout)
+        super().__init__()
+        self.setName(name)
+        self.withTimeout(timeout)
         self.robot = robot
         self.requires(robot.drivetrain)
         self._degrees_change = degrees_change
@@ -62,3 +64,6 @@ class TurnDegrees(Command):
     def _determine_direction(degrees_left: float) -> float:
         """Based on the degrees left, determines the direction of the degrees to turn"""
         return 1.0 if degrees_left >= 0 else -1.0
+    
+    def getRequirements(self) -> typing.Set[Subsystem]:
+        return {self.robot.drivetrain}

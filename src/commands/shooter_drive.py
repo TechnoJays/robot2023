@@ -16,7 +16,9 @@ class ShooterDrive(Command):
         dpad_scaling: float = 0.4,
         timeout: int = 15,
     ):
-        super().__init__(name, timeout)
+        super().__init__()
+        self.setName(name)
+        self.withTimeout(timeout)
         self.robot = robot
         self.requires(robot.shooter)
         self._dpad_scaling = dpad_scaling
@@ -46,3 +48,6 @@ class ShooterDrive(Command):
     def interrupted(self):
         """Called when another command which requires one or more of the same subsystems is scheduled to run"""
         self.end()
+    
+    def getRequirements(self) -> typing.Set[Subsystem]:
+        return {self.robot.shooter}

@@ -19,7 +19,9 @@ class TurnDegreesAbsolute(Command):
         timeout: int = 15,
     ):
         """Constructor"""
-        super().__init__(name, timeout)
+        super().__init__()
+        self.setName(name)
+        self.withTimeout(timeout)
         self.robot = robot
         self.requires(robot.drivetrain)
         self._target_degrees = degrees_target
@@ -60,3 +62,6 @@ class TurnDegreesAbsolute(Command):
     def _determine_direction(degrees_left: float) -> float:
         """Based on the degrees left, returns -1 for turn right, returns 1 for turn left"""
         return 1.0 if degrees_left >= 0 else -1.0
+    
+    def getRequirements(self) -> typing.Set[Subsystem]:
+        return {self.robot.drivetrain}

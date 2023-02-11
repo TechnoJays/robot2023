@@ -17,7 +17,9 @@ class DriveTime(Command):
         timeout: int = 15,
     ):
         """Constructor"""
-        super().__init__(name, timeout)
+        super().__init__()
+        self.setName(name)
+        self.withTimeout(timeout)
         self.robot = robot
         self.requires(robot.drivetrain)
         self._stopwatch = Stopwatch()
@@ -46,3 +48,6 @@ class DriveTime(Command):
     def interrupted(self):
         """Called when another command which requires one or more of the same subsystems is scheduled to run"""
         self.end()
+    
+    def getRequirements(self) -> typing.Set[Subsystem]:
+        return {self.robot.drivetrain}

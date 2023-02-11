@@ -30,7 +30,9 @@ class TankDrive(Command):
         the joystick is released, it will slowly decelerate (fast deceleration is one of the primary reasons for
         robot tipping)
         """
-        super().__init__(name, timeout)
+        super().__init__()
+        self.setName(name)
+        self.withTimeout(timeout)
         self.robot = robot
         self.requires(robot.drivetrain)
         self._dpad_scaling = dpad_scaling
@@ -76,3 +78,6 @@ class TankDrive(Command):
     def interrupted(self):
         """Called when another command which requires one or more of the same subsystems is scheduled to run"""
         pass
+    
+    def getRequirements(self) -> typing.Set[Subsystem]:
+        return {self.robot.drivetrain}

@@ -57,7 +57,8 @@ class Drivetrain(SubsystemBase):
         self._update_smartdashboard_sensors(self._gyro_angle)
         Drivetrain._update_smartdashboard_tank_drive(0.0, 0.0)
         Drivetrain._update_smartdashboard_arcade_drive(0.0, 0.0)
-        super().__init__(name)
+        self.setName(name)
+        super().__init__()
 
     def initDefaultCommand(self):
         self.setDefaultCommand(

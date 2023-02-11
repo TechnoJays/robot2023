@@ -30,7 +30,8 @@ class Flipper(SubsystemBase):
             Flipper.GENERAL_SECTION, Flipper.ENABLED_KEY
         )
         self._init_components()
-        super().__init__(name)
+        self.setName(name)
+        super().__init__()
 
     def _init_components(self):
         if self._enabled:
