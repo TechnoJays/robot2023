@@ -1,7 +1,7 @@
 import configparser
 from typing import Optional
 
-from commands2 import Subsystem
+from commands2 import SubsystemBase
 from wpilib.drive import DifferentialDrive, RobotDriveBase
 from wpilib import IterativeRobotBase, PWMMotorController, PWMVictorSPX
 from wpilib import ADXRS450_Gyro
@@ -9,7 +9,7 @@ from wpilib import SmartDashboard
 from commands.tank_drive import TankDrive
 
 
-class Drivetrain(Subsystem):
+class Drivetrain(SubsystemBase):
     # Config file section names
     GENERAL_SECTION = "DrivetrainGeneral"
     LEFT_MOTOR_SECTION = "DrivetrainLeftMotor"

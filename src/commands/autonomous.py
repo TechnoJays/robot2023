@@ -14,7 +14,7 @@ def use_drive_gyro(robot) -> bool:
     return robot.drivetrain.is_gyro_enabled()
 
 
-class MoveFromLine(CommandGroup):
+class MoveFromLine(CommandGroupBase):
     _SECTION = "MoveFromLine"
     _DRIVE_SPEED = "DRIVE_SPEED"
     _DRIVE_TIME = "DRIVE_TIME"
@@ -46,7 +46,7 @@ class MoveFromLine(CommandGroup):
         self.addSequential(command)
 
 
-class DriveToWall(CommandGroup):
+class DriveToWall(CommandGroupBase):
     _SECTION = "DriveToWall"
     _DRIVE_SPEED = "DRIVE_SPEED"
     _DRIVE_TIME = "DRIVE_TIME"
@@ -76,7 +76,7 @@ class DriveToWall(CommandGroup):
         self.addSequential(command)
 
 
-class DeadReckoningScore(CommandGroup):
+class DeadReckoningScore(CommandGroupBase):
     _SECTION = "DeadReckoningScore"
     _DRIVE_SPEED = "DRIVE_SPEED"
     _DRIVE_TIME = "DRIVE_TIME"
@@ -113,7 +113,7 @@ class DeadReckoningScore(CommandGroup):
         self.addSequential(command)
 
 
-class ShootScore(CommandGroup):
+class ShootScore(CommandGroupBase):
     _SECTION = "ShootScore"
     _DRIVE_SPEED = "DRIVE_SPEED"
     _DRIVE_TIME = "DRIVE_TIME"

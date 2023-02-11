@@ -3,12 +3,12 @@ import configparser
 from wpilib import SmartDashboard
 from wpilib import Solenoid
 from wpilib import PneumaticsModuleType
-from commands2 import Subsystem
+from commands2 import SubsystemBase
 
 from commands.lower_shooter import LowerShooter
 
 
-class Flipper(Subsystem):
+class Flipper(SubsystemBase):
     GENERAL_SECTION = "FlipperGeneral"
 
     ENABLED_KEY = "ENABLED"

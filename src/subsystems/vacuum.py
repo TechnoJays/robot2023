@@ -2,12 +2,12 @@ import configparser
 
 from wpilib import IterativeRobotBase, PWMMotorController, PWMVictorSPX
 from wpilib import SmartDashboard
-from commands2 import Subsystem
+from commands2 import SubsystemBase
 from commands.do_nothing_vacuum import DoNothingVacuum
 from commands.vacuum_drive import VacuumDrive
 
 
-class Vacuum(Subsystem):
+class Vacuum(SubsystemBase):
     # Config file section names
     GENERAL_SECTION = "VacuumGeneral"
 

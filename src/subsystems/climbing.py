@@ -3,12 +3,12 @@ import configparser
 from wpilib import DigitalInput, IterativeRobotBase
 from wpilib import PWMTalonSRX
 from wpilib import SmartDashboard
-from commands2 import Subsystem
+from commands2 import SubsystemBase
 
 from commands.move_winch import MoveWinch
 
 
-class Climbing(Subsystem):
+class Climbing(SubsystemBase):
     # Config file section names
     GENERAL_SECTION = "ClimbingGeneral"
     LIMIT_SWITCH_SECTION = "ClimbingLimitSwitch"

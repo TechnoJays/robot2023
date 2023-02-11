@@ -7,7 +7,7 @@ from wpilib import Joystick
 from wpilib import SendableChooser
 from wpilib import SmartDashboard
 from commands2 import CommandGroupBase
-from commands2.buttons import JoystickButton
+from commands2.button import JoystickButton
 
 from commands.autonomous import DeadReckoningScore, MoveFromLine, ShootScore
 from commands.lower_shooter import LowerShooter
@@ -177,7 +177,7 @@ class OI:
 
         return
 
-    def get_auto_choice(self) -> CommandGroup:
+    def get_auto_choice(self) -> CommandGroupBase:
         """
         Removed SmartDashboard based choice for autonomous. Hard coded
         move from line given no gyro
