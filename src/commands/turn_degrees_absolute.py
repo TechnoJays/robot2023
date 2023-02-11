@@ -2,7 +2,7 @@ from commands2 import Command
 import math
 
 from wpilib import IterativeRobotBase
-
+from commands2 import Subsystem
 
 class TurnDegreesAbsolute(Command):
     _speed: float = None
@@ -63,5 +63,5 @@ class TurnDegreesAbsolute(Command):
         """Based on the degrees left, returns -1 for turn right, returns 1 for turn left"""
         return 1.0 if degrees_left >= 0 else -1.0
     
-    def getRequirements(self) -> Set[Subsystem]:
+    def getRequirements(self) -> set[Subsystem]:
         return {self.robot.drivetrain}

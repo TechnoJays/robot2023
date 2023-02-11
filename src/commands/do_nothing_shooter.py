@@ -1,5 +1,6 @@
 from commands2 import Command
 from wpilib import IterativeRobotBase
+from commands2 import Subsystem
 
 
 class DoNothingShooter(Command):
@@ -36,5 +37,5 @@ class DoNothingShooter(Command):
         """Called when another command which requires one or more of the same subsystems is scheduled to run"""
         self.end()
 
-    def getRequirements(self) -> Set[Subsystem]:
+    def getRequirements(self) -> set[Subsystem]:
         return { self.robot.shooter }

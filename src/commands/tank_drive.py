@@ -1,7 +1,7 @@
 from commands2 import Command
 from wpilib import IterativeRobotBase
 from oi import JoystickAxis, UserController, JoystickButtons
-
+from commands2 import Subsystem
 
 class TankDrive(Command):
     _dpad_scaling: float
@@ -79,5 +79,5 @@ class TankDrive(Command):
         """Called when another command which requires one or more of the same subsystems is scheduled to run"""
         pass
     
-    def getRequirements(self) -> Set[Subsystem]:
+    def getRequirements(self) -> set[Subsystem]:
         return {self.robot.drivetrain}
