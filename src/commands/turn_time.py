@@ -20,9 +20,8 @@ class TurnTime(Command):
         """Constructor"""
         super().__init__()
         self.setName(name)
-        self.withTimeout(timeout)
         self._robot = robot
-        self.requires(robot.drivetrain)
+        self.withTimeout(timeout)
         self._stopwatch = Stopwatch()
         self._duration = duration
         self._speed = speed
@@ -34,20 +33,19 @@ class TurnTime(Command):
 
     def execute(self):
         """Called repeatedly when this Command is scheduled to run"""
-        self.robot.drivetrain.arcade_drive(0.0, self._speed, False)
+        self._robot.drivetrain.arcade_drive(0.0, self._speed, False)
         return Command.execute(self)
 
     def isFinished(self):
         """Returns true when the Command no longer needs to be run"""
         return (
             self._stopwatch.elapsed_time_in_secs() >= self._duration
-            or self.isTimedOut()
         )
 
     def end(self):
         """Called once after isFinished returns true"""
         self._stopwatch.stop()
-        self.robot.drivetrain.arcade_drive(0.0, 0.0)
+        self._robot.drivetrain.arcade_drive(0.0, 0.0)
 
     def interrupted(self):
         """Called when another command which requires one or more of the same subsystems is scheduled to run"""

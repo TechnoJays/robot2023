@@ -11,9 +11,8 @@ class MoveWinch(Command):
         """Constructor"""
         super().__init__()
         self.setName(name)
-        self.withTimeout(timeout)
         self._robot = robot
-        self.requires(robot.climbing)
+        self.withTimeout(timeout)
 
     def initialize(self):
         """Called before the Command is run for the first time."""
@@ -21,8 +20,8 @@ class MoveWinch(Command):
 
     def execute(self):
         """Called repeatedly when this Command is scheduled to run"""
-        move_speed = self.robot.oi.get_axis(UserController.SCORING, JoystickAxis.LEFTY)
-        self.robot.climbing.move_winch(move_speed)
+        move_speed = self._robot.oi.get_axis(UserController.SCORING, JoystickAxis.LEFTY)
+        self._robot.climbing.move_winch(move_speed)
         return Command.execute(self)
 
     def isFinished(self):
@@ -31,7 +30,7 @@ class MoveWinch(Command):
 
     def end(self):
         """Called once after isFinished returns true"""
-        self.robot.climbing.move_winch(0.0)
+        self._robot.climbing.move_winch(0.0)
 
     def interrupted(self):
         """Called when another command which requires one or more of the same subsystems is scheduled to run"""

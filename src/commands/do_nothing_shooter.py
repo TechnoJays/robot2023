@@ -16,7 +16,6 @@ class DoNothingShooter(Command):
         self._robot = robot
         self.setName(name)
         self.withTimeout(timeout)
-        self.requires(robot.shooter)
 
     def initialize(self):
         """Called before the Command is run for the first time."""
@@ -24,7 +23,7 @@ class DoNothingShooter(Command):
 
     def execute(self):
         """Called repeatedly when this Command is scheduled to run"""
-        self.robot.shooter.move(0.0)
+        self._robot.shooter.move(0.0)
         return Command.execute(self)
 
     def isFinished(self):

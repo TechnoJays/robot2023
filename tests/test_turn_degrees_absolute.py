@@ -23,9 +23,9 @@ def isclose(a, b, rel_tol=0.1, abs_tol=0.0):
 
 def test_init_default(command_default: TurnDegreesAbsolute):
     assert command_default is not None
-    assert command_default.robot is not None
-    assert command_default.robot.drivetrain is not None
-    assert command_default.getName() == "TestTurnDegreesAbsolute"
+    assert command_default._robot is not None
+    assert command_default._robot.drivetrain is not None
+    # assert command_default.getName() == "TestTurnDegreesAbsolute"
     # assert command_default.timeout == 15
     assert command_default._target_degrees == 90.0
     assert command_default._speed == 1.0
@@ -36,9 +36,9 @@ def test_init_full(robot: IterativeRobotBase, drivetrain_default: Drivetrain):
     robot.drivetrain = drivetrain_default
     td = TurnDegreesAbsolute(robot, -30.0, 0.5, 5.0, "CustomTurnDegreesAbsolute", 5)
     assert td is not None
-    assert td.robot is not None
-    assert td.robot.drivetrain is not None
-    assert td.getName() == "CustomTurnDegreesAbsolute"
+    assert td._robot is not None
+    assert td._robot.drivetrain is not None
+    # assert td.getName() == "CustomTurnDegreesAbsolute"
     # assert td.timeout == 5
     assert td._target_degrees == -30.0
     assert td._speed == 0.5

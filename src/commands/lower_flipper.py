@@ -11,9 +11,8 @@ class LowerFlippr(Command):
     ):
         super().__init__()
         self.setName(name)
-        self.withTimeout(timeout)
         self._robot = robot
-        self.requires(robot.shooter)
+        self.withTimeout(timeout)
 
     def initialize(self):
         """Called before the Command is run for the first time."""
@@ -21,7 +20,7 @@ class LowerFlippr(Command):
 
     def execute(self):
         """Called repeatedly when this Command is scheduled to run"""
-        self.robot.shooter.upheave(False)
+        self._robot.shooter.upheave(False)
         return Command.execute(self)
 
     def isFinished(self):

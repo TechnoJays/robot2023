@@ -17,10 +17,9 @@ class Shoot(Command):
     ):
         super().__init__()
         self.setName(name)
-        self.withTimeout(timeout)
         self._robot = robot
         self._speed = speed
-        self.requires(robot.shooter)
+        self.withTimeout(timeout)
 
     def initialize(self):
         """Called before the Command is run for the first time."""
@@ -30,7 +29,7 @@ class Shoot(Command):
         """
         Called repeatedly when this Command is scheduled to run
         """
-        self.robot.shooter.move(self._speed)
+        self._robot.shooter.move(self._speed)
         return Command.execute(self)
 
     def isFinished(self):
@@ -42,7 +41,7 @@ class Shoot(Command):
 
     def end(self):
         """Called once after isFinished returns true"""
-        self.robot.shooter.move(0.0)
+        self._robot.shooter.move(0.0)
 
     def interrupted(self):
         """Called when another command which requires one or more of the same subsystems is scheduled to run"""

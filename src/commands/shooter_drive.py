@@ -21,9 +21,8 @@ class ShooterDrive(Command):
     ):
         super().__init__()
         self.setName(name)
-        self.withTimeout(timeout)
         self._robot = robot
-        self.requires(robot.shooter)
+        self.withTimeout(timeout)
         self._dpad_scaling = dpad_scaling
         self._stick_scaling = modifier_scaling
 
@@ -33,10 +32,10 @@ class ShooterDrive(Command):
 
     def execute(self):
         """Called repeatedly when this Command is scheduled to run"""
-        shooter: float = self.robot.oi.get_axis(
+        shooter: float = self._robot.oi.get_axis(
             UserController.SCORING, JoystickAxis.RIGHTY
         )
-        self.robot.shooter.move(shooter * self._stick_scaling)
+        self._robot.shooter.move(shooter * self._stick_scaling)
 
         return Command.execute(self)
 

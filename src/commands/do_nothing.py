@@ -10,7 +10,6 @@ class DoNothing(Command):
         """Constructor"""
         super().__init__()
         self.setName(name)
-        self.withTimeout(timeout)
 
     def initialize(self):
         """Called before the Command is run for the first time."""

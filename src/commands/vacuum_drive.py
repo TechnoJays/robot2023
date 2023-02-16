@@ -20,9 +20,8 @@ class VacuumDrive(Command):
     ):
         super().__init__()
         self.setName(name)
-        self.withTimeout(timeout)
         self._robot = robot
-        self.requires(robot.vacuum)
+        self.withTimeout(timeout)
         self._dpad_scaling = dpad_scaling
         self._stick_scaling = modifier_scaling
 
@@ -32,10 +31,10 @@ class VacuumDrive(Command):
 
     def execute(self):
         """Called repeatedly when this Command is scheduled to run"""
-        vacuum: float = self.robot.oi.get_axis(
+        vacuum: float = self._robot.oi.get_axis(
             UserController.SCORING, JoystickAxis.RIGHTY
         )
-        self.robot.vacuum.move(vacuum * self._stick_scaling)
+        self._robot.vacuum.move(vacuum * self._stick_scaling)
 
         return Command.execute(self)
 

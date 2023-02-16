@@ -34,9 +34,8 @@ class TankDrive(Command):
         """
         super().__init__()
         self.setName(name)
-        self.withTimeout(timeout)
         self._robot = robot
-        self.requires(robot.drivetrain)
+        self.withTimeout(timeout)
         self._dpad_scaling = dpad_scaling
         self._stick_scaling = modifier_scaling
 
@@ -46,27 +45,27 @@ class TankDrive(Command):
 
     def execute(self):
         """Called repeatedly when this Command is scheduled to run"""
-        modifier: bool = self.robot.oi.get_button_state(
+        modifier: bool = self._robot.oi.get_button_state(
             UserController.DRIVER, JoystickButtons.LEFTBUMPER
         )
-        dpad_y: float = self.robot.oi.get_axis(
+        dpad_y: float = self._robot.oi.get_axis(
             UserController.DRIVER, JoystickAxis.DPADY
         )
         if dpad_y != 0.0:
-            self.robot.drivetrain.arcade_drive(self._dpad_scaling * dpad_y, 0.0)
+            self._robot.drivetrain.arcade_drive(self._dpad_scaling * dpad_y, 0.0)
         else:
-            left_track: float = self.robot.oi.get_axis(
+            left_track: float = self._robot.oi.get_axis(
                 UserController.DRIVER, JoystickAxis.LEFTY
             )
-            right_track: float = self.robot.oi.get_axis(
+            right_track: float = self._robot.oi.get_axis(
                 UserController.DRIVER, JoystickAxis.RIGHTY
             )
             if modifier:
-                self.robot.drivetrain.tank_drive(
+                self._robot.drivetrain.tank_drive(
                     self._stick_scaling * left_track, self._stick_scaling * right_track
                 )
             else:
-                self.robot.drivetrain.tank_drive(left_track, right_track)
+                self._robot.drivetrain.tank_drive(left_track, right_track)
         return Command.execute(self)
 
     def isFinished(self):

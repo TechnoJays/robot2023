@@ -23,9 +23,8 @@ class TurnDegreesAbsolute(Command):
         """Constructor"""
         super().__init__()
         self.setName(name)
-        self.withTimeout(timeout)
         self._robot = robot
-        self.requires(robot.drivetrain)
+        self.withTimeout(timeout)
         self._target_degrees = degrees_target
         self._speed = speed
         self._degree_threshold = threshold
@@ -36,16 +35,16 @@ class TurnDegreesAbsolute(Command):
 
     def execute(self):
         """Called repeatedly when this Command is scheduled to run"""
-        degrees_left = self._target_degrees - self.robot.drivetrain.get_gyro_angle()
+        degrees_left = self._target_degrees - self._robot.drivetrain.get_gyro_angle()
         turn_speed = self._speed * TurnDegreesAbsolute._determine_direction(
             degrees_left
         )
-        self.robot.drivetrain.arcade_drive(0.0, turn_speed, False)
+        self._robot.drivetrain.arcade_drive(0.0, turn_speed, False)
         return Command.execute(self)
 
     def isFinished(self):
         """Returns true when the Command no longer needs to be run"""
-        current = self.robot.drivetrain.get_gyro_angle()
+        current = self._robot.drivetrain.get_gyro_angle()
         # If abs(target - current) < threshold then return true
         return (
             math.fabs(self._target_degrees - current) <= self._degree_threshold
@@ -54,7 +53,7 @@ class TurnDegreesAbsolute(Command):
 
     def end(self):
         """Called once after isFinished returns true"""
-        self.robot.drivetrain.arcade_drive(0.0, 0.0)
+        self._robot.drivetrain.arcade_drive(0.0, 0.0)
 
     def interrupted(self):
         """Called when another command which requires one or more of the same subsystems is scheduled to run"""

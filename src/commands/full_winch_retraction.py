@@ -16,10 +16,9 @@ class FullWinchRetraction(Command):
         """Constructor"""
         super().__init__()
         self.setName(name)
-        self.withTimeout(timeout)
         self._robot = robot
         self._climb_speed: float = speed
-        self.requires(robot.climbing)
+        self.withTimeout(timeout)
 
     def initialize(self):
         """Called before the Command is run for the first time."""
@@ -27,16 +26,16 @@ class FullWinchRetraction(Command):
 
     def execute(self):
         """Called repeatedly when this Command is scheduled to run"""
-        self.robot.climbing.move_winch(self._climb_speed)
+        self._robot.climbing.move_winch(self._climb_speed)
         return Command.execute(self)
 
     def isFinished(self):
         """Returns true when the Command no longer needs to be run"""
-        return self.robot.climbing.is_retracted()
+        return self._robot.climbing.is_retracted()
 
     def end(self):
         """Called once after isFinished returns true"""
-        self.robot.climbing.move_winch(0.0)
+        self._robot.climbing.move_winch(0.0)
 
     def interrupted(self):
         """Called when another command which requires one or more of the same subsystems is scheduled to run"""
