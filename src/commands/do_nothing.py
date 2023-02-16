@@ -1,5 +1,6 @@
-from commands1 import Command
+from commands2 import Command
 from wpilib import IterativeRobotBase
+from commands2 import Subsystem
 
 
 class DoNothing(Command):
@@ -7,7 +8,8 @@ class DoNothing(Command):
         self, robot: IterativeRobotBase, name: str = "DoNothing", timeout: int = 15
     ):
         """Constructor"""
-        super().__init__(name, timeout)
+        super().__init__()
+        self.setName(name)
 
     def initialize(self):
         """Called before the Command is run for the first time."""
@@ -28,3 +30,6 @@ class DoNothing(Command):
     def interrupted(self):
         """Called when another command which requires one or more of the same subsystems is scheduled to run"""
         pass
+
+    def getRequirements(self) -> set[Subsystem]:
+        return {}

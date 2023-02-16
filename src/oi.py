@@ -6,8 +6,8 @@ from wpilib import DriverStation, IterativeRobotBase
 from wpilib import Joystick
 from wpilib import SendableChooser
 from wpilib import SmartDashboard
-from commands1 import CommandGroup
-from commands1.buttons import JoystickButton
+from commands2 import CommandGroupBase
+from commands2.button import JoystickButton
 
 from commands.autonomous import DeadReckoningScore, MoveFromLine, ShootScore
 from commands.lower_shooter import LowerShooter
@@ -82,13 +82,14 @@ class OI:
     _dead_zones: List[float] = []
     _auto_program_chooser = None
     _starting_chooser = None
+    _robot: IterativeRobotBase = None
 
     def __init__(
         self,
         robot: IterativeRobotBase,
         configfile: str = "/home/lvuser/py/configs/joysticks.ini",
     ):
-        self.robot = robot
+        self._robot = robot
         self._config = configparser.ConfigParser()
         self._config.read(configfile)
         self._init_joystick_binding()
@@ -142,10 +143,10 @@ class OI:
     def _create_smartdashboard_buttons(self):
         self._auto_program_chooser = SendableChooser()
         self._auto_program_chooser.setDefaultOption(
-            "Move From Line", MoveFromLine(self.robot)
+            "Move From Line", MoveFromLine(self._robot)
         )
         self._auto_program_chooser.addOption(
-            "Score Low", DeadReckoningScore(self.robot)
+            "Score Low", DeadReckoningScore(self._robot)
         )
         SmartDashboard.putData("Autonomous", self._auto_program_chooser)
 
@@ -155,36 +156,36 @@ class OI:
         suck_button = JoystickButton(
             self._controllers[UserController.SCORING.value], JoystickButtons.RIGHTBUMPER
         )
-        suck_button.whileHeld(Vacuum(self.robot, 1.0))
+        suck_button.whileHeld(Vacuum(self._robot, 1.0))
 
         blow_button = JoystickButton(
             self._controllers[UserController.SCORING.value], JoystickButtons.LEFTBUMPER
         )
-        blow_button.whileHeld(Vacuum(self.robot, -1.0))
+        blow_button.whileHeld(Vacuum(self._robot, -1.0))
 
         # Shooter Buttons Setup
         shoot_button = JoystickButton(
             self._controllers[UserController.SCORING.value],
             JoystickButtons.A,  # actually X key
         )
-        shoot_button.whileHeld(Shoot(self.robot, 1.0))
+        shoot_button.whileHeld(Shoot(self._robot, 1.0))
 
         # Considered disabling this to prevent breaking the robot, YOLO
         unshoot_button = JoystickButton(
             self._controllers[UserController.SCORING.value], JoystickButtons.B
         )
-        unshoot_button.whileHeld(Shoot(self.robot, -1.0))
+        unshoot_button.whileHeld(Shoot(self._robot, -1.0))
 
         return
 
-    def get_auto_choice(self) -> CommandGroup:
+    def get_auto_choice(self) -> CommandGroupBase:
         """
         Removed SmartDashboard based choice for autonomous. Hard coded
         move from line given no gyro
         """
         # return self._auto_program_chooser.getSelected()
-        # return MoveFromLine(self.robot)
-        return ShootScore(self.robot)
+        # return MoveFromLine(self._robot)
+        return ShootScore(self._robot)
 
     def get_position(self) -> int:
         return self._starting_chooser.getSelected()

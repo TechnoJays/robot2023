@@ -3,12 +3,12 @@ import configparser
 from wpilib import DigitalInput, IterativeRobotBase
 from wpilib import PWMTalonSRX
 from wpilib import SmartDashboard
-from commands1 import Subsystem
+from commands2 import SubsystemBase
 
 from commands.move_winch import MoveWinch
 
 
-class Climbing(Subsystem):
+class Climbing(SubsystemBase):
     # Config file section names
     GENERAL_SECTION = "ClimbingGeneral"
     LIMIT_SWITCH_SECTION = "ClimbingLimitSwitch"
@@ -37,7 +37,9 @@ class Climbing(Subsystem):
         self._config.read(configfile)
         self._init_components()
         self._update_smartdashboard_sensors()
-        super().__init__(name)
+        self.setName(name)
+        super().__init__()
+        
 
     def _init_components(self):
         self._max_speed = self._config.getfloat(

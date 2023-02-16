@@ -1,12 +1,14 @@
-from commands1 import Command
+from commands2 import Command
 from wpilib import IterativeRobotBase
 
 from oi import JoystickAxis, JoystickButtons, UserController
-
+from commands2 import Subsystem
 
 class VacuumDrive(Command):
     _dpad_scaling: float
     _stick_scaling: float
+    _robot: IterativeRobotBase = None
+
 
     def __init__(
         self,
@@ -16,9 +18,10 @@ class VacuumDrive(Command):
         dpad_scaling: float = 0.4,
         timeout: int = 15,
     ):
-        super().__init__(name, timeout)
-        self.robot = robot
-        self.requires(robot.vacuum)
+        super().__init__()
+        self.setName(name)
+        self._robot = robot
+        self.withTimeout(timeout)
         self._dpad_scaling = dpad_scaling
         self._stick_scaling = modifier_scaling
 
@@ -28,10 +31,10 @@ class VacuumDrive(Command):
 
     def execute(self):
         """Called repeatedly when this Command is scheduled to run"""
-        vacuum: float = self.robot.oi.get_axis(
+        vacuum: float = self._robot.oi.get_axis(
             UserController.SCORING, JoystickAxis.RIGHTY
         )
-        self.robot.vacuum.move(vacuum * self._stick_scaling)
+        self._robot.vacuum.move(vacuum * self._stick_scaling)
 
         return Command.execute(self)
 
@@ -46,3 +49,6 @@ class VacuumDrive(Command):
     def interrupted(self):
         """Called when another command which requires one or more of the same subsystems is scheduled to run"""
         self.end()
+    
+    def getRequirements(self) -> set[Subsystem]:
+        return {self._robot.vacuum}

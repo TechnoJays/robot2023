@@ -1,12 +1,14 @@
-from commands1 import Command
+from commands2 import Command
 from wpilib import IterativeRobotBase
 from util.stopwatch import Stopwatch
+from commands2 import Subsystem
 
 
 class DriveTime(Command):
     _stopwatch: Stopwatch = None
     _duration: float = None
     _speed: float = None
+    _robot: IterativeRobotBase = None
 
     def __init__(
         self,
@@ -17,9 +19,10 @@ class DriveTime(Command):
         timeout: int = 15,
     ):
         """Constructor"""
-        super().__init__(name, timeout)
-        self.robot = robot
-        self.requires(robot.drivetrain)
+        super().__init__()
+        self.setName(name)
+        self._robot = robot
+        self.withTimeout(timeout)
         self._stopwatch = Stopwatch()
         self._duration = duration
         self._speed = speed
@@ -31,7 +34,7 @@ class DriveTime(Command):
 
     def execute(self):
         """Called repeatedly when this Command is scheduled to run"""
-        self.robot.drivetrain.arcade_drive(self._speed, 0.0, False)
+        self._robot.drivetrain.arcade_drive(self._speed, 0.0, False)
         return Command.execute(self)
 
     def isFinished(self):
@@ -41,8 +44,11 @@ class DriveTime(Command):
     def end(self):
         """Called once after isFinished returns true"""
         self._stopwatch.stop()
-        self.robot.drivetrain.arcade_drive(0.0, 0.0)
+        self._robot.drivetrain.arcade_drive(0.0, 0.0)
 
     def interrupted(self):
         """Called when another command which requires one or more of the same subsystems is scheduled to run"""
         self.end()
+    
+    def getRequirements(self) -> set[Subsystem]:
+        return {self._robot.drivetrain}

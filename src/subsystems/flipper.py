@@ -3,12 +3,12 @@ import configparser
 from wpilib import SmartDashboard
 from wpilib import Solenoid
 from wpilib import PneumaticsModuleType
-from commands1 import Subsystem
+from commands2 import SubsystemBase
 
 from commands.lower_shooter import LowerShooter
 
 
-class Flipper(Subsystem):
+class Flipper(SubsystemBase):
     GENERAL_SECTION = "FlipperGeneral"
 
     ENABLED_KEY = "ENABLED"
@@ -30,7 +30,8 @@ class Flipper(Subsystem):
             Flipper.GENERAL_SECTION, Flipper.ENABLED_KEY
         )
         self._init_components()
-        super().__init__(name)
+        self.setName(name)
+        super().__init__()
 
     def _init_components(self):
         if self._enabled:

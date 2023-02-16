@@ -1,10 +1,13 @@
-from commands1 import Command
+from commands2 import Command
 from wpilib import IterativeRobotBase
+from commands2 import Subsystem
 
 from oi import JoystickAxis, JoystickButtons, UserController
 
 
 class ShooterDrive(Command):
+    _robot: IterativeRobotBase = None
+
     _dpad_scaling: float
     _stick_scaling: float
 
@@ -16,9 +19,10 @@ class ShooterDrive(Command):
         dpad_scaling: float = 0.4,
         timeout: int = 15,
     ):
-        super().__init__(name, timeout)
-        self.robot = robot
-        self.requires(robot.shooter)
+        super().__init__()
+        self.setName(name)
+        self._robot = robot
+        self.withTimeout(timeout)
         self._dpad_scaling = dpad_scaling
         self._stick_scaling = modifier_scaling
 
@@ -28,10 +32,10 @@ class ShooterDrive(Command):
 
     def execute(self):
         """Called repeatedly when this Command is scheduled to run"""
-        shooter: float = self.robot.oi.get_axis(
+        shooter: float = self._robot.oi.get_axis(
             UserController.SCORING, JoystickAxis.RIGHTY
         )
-        self.robot.shooter.move(shooter * self._stick_scaling)
+        self._robot.shooter.move(shooter * self._stick_scaling)
 
         return Command.execute(self)
 
@@ -46,3 +50,6 @@ class ShooterDrive(Command):
     def interrupted(self):
         """Called when another command which requires one or more of the same subsystems is scheduled to run"""
         self.end()
+    
+    def getRequirements(self) -> set[Subsystem]:
+        return {self._robot.shooter}

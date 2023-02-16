@@ -1,7 +1,7 @@
 import configparser
 from typing import Optional
 
-from commands1 import Subsystem
+from commands2 import SubsystemBase
 from wpilib.drive import DifferentialDrive, RobotDriveBase
 from wpilib import IterativeRobotBase, PWMMotorController, PWMVictorSPX
 from wpilib import ADXRS450_Gyro
@@ -9,7 +9,7 @@ from wpilib import SmartDashboard
 from commands.tank_drive import TankDrive
 
 
-class Drivetrain(Subsystem):
+class Drivetrain(SubsystemBase):
     # Config file section names
     GENERAL_SECTION = "DrivetrainGeneral"
     LEFT_MOTOR_SECTION = "DrivetrainLeftMotor"
@@ -57,7 +57,8 @@ class Drivetrain(Subsystem):
         self._update_smartdashboard_sensors(self._gyro_angle)
         Drivetrain._update_smartdashboard_tank_drive(0.0, 0.0)
         Drivetrain._update_smartdashboard_arcade_drive(0.0, 0.0)
-        super().__init__(name)
+        self.setName(name)
+        super().__init__()
 
     def initDefaultCommand(self):
         self.setDefaultCommand(

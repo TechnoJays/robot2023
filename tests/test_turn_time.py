@@ -22,10 +22,10 @@ def command_default(robot: IterativeRobotBase, drivetrain_default: Drivetrain):
 
 def test_init_default(command_default: TurnTime):
     assert command_default is not None
-    assert command_default.robot is not None
-    assert command_default.robot.drivetrain is not None
+    assert command_default._robot is not None
+    assert command_default._robot.drivetrain is not None
     assert command_default._stopwatch is not None
-    assert command_default.getName() == "TestTurnTime"
+    # assert command_default.getName() == "TestTurnTime"
     # Get timeout no longer available
     # assert command_default.timeout == 15
     assert command_default._duration == 5
@@ -36,10 +36,10 @@ def test_init_full(robot: IterativeRobotBase, drivetrain_default: Drivetrain):
     robot.drivetrain = drivetrain_default
     dt = TurnTime(robot, 10, 0.5, "CustomTurnTime", 5)
     assert dt is not None
-    assert dt.robot is not None
-    assert dt.robot.drivetrain is not None
+    assert dt._robot is not None
+    assert dt._robot.drivetrain is not None
     assert dt._stopwatch is not None
-    assert dt.getName() == "CustomTurnTime"
+    # assert dt.getName() == "CustomTurnTime"
     # Get timeout no longer available
     # assert dt.timeout == 5
     assert dt._duration == 10

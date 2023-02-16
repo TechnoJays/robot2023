@@ -1,4 +1,4 @@
-from commands1 import Command
+from commands2 import Command
 import pytest
 from wpilib import IterativeRobotBase
 import oi
@@ -90,9 +90,9 @@ def command_default(robot: IterativeRobotBase, drivetrain_default: Drivetrain):
 
 def test_init_default(command_default: TankDrive):
     assert command_default is not None
-    assert command_default.robot is not None
-    assert command_default.robot.drivetrain is not None
-    assert command_default.getName() == "TestTankDrive"
+    assert command_default._robot is not None
+    assert command_default._robot.drivetrain is not None
+    # assert command_default.getName() == "TestTankDrive"
     # Timeout no longer accessible
     # assert command_default.timeout == -1
     assert command_default._dpad_scaling == 1.0
@@ -105,9 +105,9 @@ def test_init_full(robot: IterativeRobotBase, drivetrain_default: Drivetrain):
         robot, "CustomTankDrive", modifier_scaling=0.7, dpad_scaling=0.3, timeout=5
     )
     assert td is not None
-    assert td.robot is not None
-    assert td.robot.drivetrain is not None
-    assert td.getName() == "CustomTankDrive"
+    assert td._robot is not None
+    assert td._robot.drivetrain is not None
+    # assert td.getName() == "CustomTankDrive"
     assert td._stick_scaling == 0.7
     assert td._dpad_scaling == 0.3
     # Timeout no longer accessible

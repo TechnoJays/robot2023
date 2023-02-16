@@ -1,17 +1,21 @@
-from commands1 import Command
+from commands2 import Command
 from wpilib import IterativeRobotBase
+from commands2 import Subsystem
 
 
 class DoNothingShooter(Command):
+    _robot: IterativeRobotBase = None
+
     def __init__(
         self,
         robot: IterativeRobotBase,
         name: str = "DoNothingShooter",
         timeout: int = 15,
     ):
-        super().__init__(name, timeout)
-        self.robot = robot
-        self.requires(robot.shooter)
+        super().__init__()
+        self._robot = robot
+        self.setName(name)
+        self.withTimeout(timeout)
 
     def initialize(self):
         """Called before the Command is run for the first time."""
@@ -19,7 +23,7 @@ class DoNothingShooter(Command):
 
     def execute(self):
         """Called repeatedly when this Command is scheduled to run"""
-        self.robot.shooter.move(0.0)
+        self._robot.shooter.move(0.0)
         return Command.execute(self)
 
     def isFinished(self):
@@ -33,3 +37,6 @@ class DoNothingShooter(Command):
     def interrupted(self):
         """Called when another command which requires one or more of the same subsystems is scheduled to run"""
         self.end()
+
+    def getRequirements(self) -> set[Subsystem]:
+        return { self._robot.shooter }

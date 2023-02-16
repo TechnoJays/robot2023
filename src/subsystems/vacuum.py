@@ -2,12 +2,12 @@ import configparser
 
 from wpilib import IterativeRobotBase, PWMMotorController, PWMVictorSPX
 from wpilib import SmartDashboard
-from commands1 import Subsystem
+from commands2 import SubsystemBase
 from commands.do_nothing_vacuum import DoNothingVacuum
 from commands.vacuum_drive import VacuumDrive
 
 
-class Vacuum(Subsystem):
+class Vacuum(SubsystemBase):
     # Config file section names
     GENERAL_SECTION = "VacuumGeneral"
 
@@ -34,7 +34,8 @@ class Vacuum(Subsystem):
         self._config.read(configfile)
         self._init_components()
         Vacuum._update_smartdashboard(0.0)
-        super().__init__(name)
+        self.setName(name)
+        super().__init__()
 
     def _init_components(self):
         self._max_speed = self._config.getfloat(
