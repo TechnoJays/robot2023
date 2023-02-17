@@ -54,7 +54,7 @@ class MyRobot(wpilib.TimedRobot):
         The scheduler is what runs the periodioc processes for managing
         commands during autonomous
         """
-        Scheduler.getInstance().run()
+        CommandScheduler.getInstance().run()
         pass
 
     def teleopPeriodic(self):
@@ -64,7 +64,7 @@ class MyRobot(wpilib.TimedRobot):
         commands during autonomous
         """
         SmartDashboard.putString("Color Target", str(self.oi.get_game_message()))
-        Scheduler.getInstance().run()
+        CommandScheduler.getInstance().run()
 
     def testPeriodic(self):
         """

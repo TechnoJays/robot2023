@@ -7,5 +7,5 @@ robotpy
 robotpy[commands2]
 robotpy-wpimath
 robotpy-wpiutil
-opencv-python
+#opencv-python
 #robotpy-cscore

@@ -192,7 +192,7 @@ class OI:
 
     @staticmethod
     def get_game_message() -> str:
-        return DriverStation.getInstance().getGameSpecificMessage()
+        return DriverStation.getGameSpecificMessage()
 
     def get_axis(self, user: UserController, axis: JoystickAxis) -> float:
         """Read axis value for specified controller/axis.
