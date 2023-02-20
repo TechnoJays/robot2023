@@ -1,9 +1,9 @@
 import configparser
 
+from commands2 import SubsystemBase
+from wpilib import PneumaticsModuleType
 from wpilib import SmartDashboard
 from wpilib import Solenoid
-from wpilib import PneumaticsModuleType
-from commands2 import SubsystemBase
 
 from commands.lower_shooter import LowerShooter
 

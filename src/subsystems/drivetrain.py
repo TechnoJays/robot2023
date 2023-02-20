@@ -2,10 +2,11 @@ import configparser
 from typing import Optional
 
 from commands2 import SubsystemBase
-from wpilib.drive import DifferentialDrive, RobotDriveBase
-from wpilib import IterativeRobotBase, PWMMotorController, PWMVictorSPX
 from wpilib import ADXRS450_Gyro
+from wpilib import IterativeRobotBase, PWMMotorController, PWMVictorSPX
 from wpilib import SmartDashboard
+from wpilib.drive import DifferentialDrive, RobotDriveBase
+
 from commands.tank_drive import TankDrive
 
 

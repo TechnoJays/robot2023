@@ -2,16 +2,14 @@ import configparser
 from enum import Enum
 from typing import List
 
+from commands2 import CommandGroupBase
+from commands2.button import JoystickButton
 from wpilib import DriverStation, IterativeRobotBase
 from wpilib import Joystick
 from wpilib import SendableChooser
 from wpilib import SmartDashboard
-from commands2 import CommandGroupBase
-from commands2.button import JoystickButton
 
 from commands.autonomous import DeadReckoningScore, MoveFromLine, ShootScore
-from commands.lower_shooter import LowerShooter
-from commands.raise_shooter import RaiseShooter
 from commands.shoot import Shoot
 from commands.vacuum import Vacuum
 

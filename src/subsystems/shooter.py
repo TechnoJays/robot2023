@@ -1,10 +1,10 @@
 import configparser
 from typing import Optional
 
-from wpilib import IterativeRobotBase, PWMMotorController, PWMVictorSPX, SmartDashboard
 from commands2 import SubsystemBase
+from wpilib import IterativeRobotBase, PWMMotorController, PWMVictorSPX, SmartDashboard
+
 from commands.do_nothing_shooter import DoNothingShooter
-from commands.shooter_drive import ShooterDrive
 
 
 class Shooter(SubsystemBase):
