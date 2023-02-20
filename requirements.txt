@@ -2,10 +2,14 @@
 # The line below picks up depencies described in setup.py install_requires. Replace as necessary
 # -e .
 --pre
-wpilib
+wpilib~=2023.4.1.0
 robotpy
 robotpy[commands2]
 robotpy-wpimath
 robotpy-wpiutil
 #opencv-python
 #robotpy-cscore
+
+pyfrc~=2023.0.1
+pytest~=7.2.1
+setuptools~=67.1.0
