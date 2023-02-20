@@ -1,5 +1,6 @@
 import pytest
 from util.stopwatch import Stopwatch
+from time import sleep
 
 
 @pytest.fixture(scope="function")
@@ -28,6 +29,8 @@ def test_start(stopwatch_default):
 def test_reset(stopwatch_default):
     stopwatch_default.start()
     start_time = stopwatch_default._start
+    # sleep for really fast computers who can run the tests in under milliseconds
+    sleep(0.005)
     stopwatch_default.reset()
     assert stopwatch_default._start is not None
     assert stopwatch_default._start != start_time
@@ -57,6 +60,8 @@ def test_stop(stopwatch_default, started):
 def test_elapsed_time_in_secs(stopwatch_default, started):
     if started:
         stopwatch_default.start()
+    # sleep for really fast computers who can run the tests in under milliseconds
+    sleep(0.005)
     time_in_sec = stopwatch_default.elapsed_time_in_secs()
     if started:
         assert stopwatch_default._start is not None
@@ -77,6 +82,8 @@ def test_elapsed_time_in_secs(stopwatch_default, started):
 def test_elapsed_time_in_msecs(stopwatch_default, started):
     if started:
         stopwatch_default.start()
+    # sleep for really fast computers who can run the tests in under milliseconds
+    sleep(0.005)
     time_in_msec = stopwatch_default.elapsed_time_in_msecs()
     if started:
         assert stopwatch_default._start is not None
