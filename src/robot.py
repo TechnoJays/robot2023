@@ -1,35 +1,25 @@
 import wpilib
-from commands2 import Command
 from commands2 import CommandScheduler
-from wpilib import SmartDashboard
+from commands2 import TimedCommandRobot
 
-from oi import OI
-from subsystems.climbing import Climbing
-from subsystems.drivetrain import Drivetrain
-from subsystems.shooter import Shooter
-from subsystems.vacuum import Vacuum
+from robot_controller import RobotController
 
 
-class MyRobot(wpilib.TimedRobot):
+class RetrojaysRobot(TimedCommandRobot):
 
-    oi: OI = None
-    drivetrain: Drivetrain = None
-    climbing: Climbing = None
-    shooter: Shooter = None
-    vacuum: Vacuum = None
-    autonomous_command: Command = None
+    _robot_controller: RobotController = None
 
     def autonomousInit(self):
         # Schedule the autonomous command
-        self.autonomous_command = self.oi.get_auto_choice()
-        self.autonomous_command.start()
+        # TODO move into robot controller for better mgmt?
+        autonomous_command = self._robot_controller.get_auto_choice()
+        autonomous_command.start()
 
     def testInit(self):
         pass
 
     def teleopInit(self):
-        if self.autonomous_command:
-            self.autonomous_command.cancel()
+        pass
 
     def disabledInit(self):
         pass
@@ -39,14 +29,8 @@ class MyRobot(wpilib.TimedRobot):
         This function is called upon program startup and
         should be used for any initialization code.
         """
-        self.oi = OI(self)
-        self.drivetrain = Drivetrain(self)
-        self.climbing = Climbing(self)
-        self.shooter = Shooter(self)
-        self.vacuum = Vacuum(self)
-        self.oi.setup_button_bindings()
-        # wpilib.CameraServer.launch('subsystems/vision.py:main')
-        wpilib.CameraServer.launch()
+        self._robot_controller = RobotController(self)
+        self._robot_controller.mappings()
 
     def autonomousPeriodic(self):
         """
@@ -54,7 +38,6 @@ class MyRobot(wpilib.TimedRobot):
         The scheduler is what runs the periodioc processes for managing
         commands during autonomous
         """
-        CommandScheduler.getInstance().run()
         pass
 
     def teleopPeriodic(self):
@@ -63,7 +46,6 @@ class MyRobot(wpilib.TimedRobot):
         The scheduler is what runs the periodic processes for managing
         commands during autonomous
         """
-        SmartDashboard.putString("Color Target", str(self.oi.get_game_message()))
         CommandScheduler.getInstance().run()
 
     def testPeriodic(self):
@@ -72,6 +54,10 @@ class MyRobot(wpilib.TimedRobot):
         """
         pass
 
+    def controller(self) -> RobotController:
+        """ Returns the robot controller managing all robot subsystems and operator interface"""
+        return self._robot_controller
+
 
 if __name__ == "__main__":
-    wpilib.run(MyRobot)
+    wpilib.run(RetrojaysRobot)

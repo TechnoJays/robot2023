@@ -1,6 +1,6 @@
 from configparser import ConfigParser
 
-from commands2 import CommandGroupBase
+from commands2 import CommandGroupBase, TimedCommandRobot
 from commands2 import WaitCommand
 from wpilib import IterativeRobotBase
 
@@ -19,21 +19,20 @@ class MoveFromLine(CommandGroupBase):
     _DRIVE_SPEED = "DRIVE_SPEED"
     _DRIVE_TIME = "DRIVE_TIME"
 
-    _robot = None
+    _robot: TimedCommandRobot = None
 
     _drive_speed: float = None
     _drive_time: float = None
 
     def __init__(
-        self,
-        robot: IterativeRobotBase,
-        config_path: str = "/home/lvuser/py/configs/autonomous.ini",
+            self,
+            robot: TimedCommandRobot,
+            config: ConfigParser,
     ):
         """Constructor"""
         super().__init__()
         self._robot = robot
-        config = ConfigParser()
-        config.read(config_path)
+        self._config = config
         self._load_config(config)
         self._initialize_commands()
 
@@ -57,13 +56,12 @@ class DriveToWall(CommandGroupBase):
     _drive_time: float = None
 
     def __init__(
-        self, robot, config_path: str = "/home/lvuser/py/configs/autonomous.ini"
+            self, robot: IterativeRobotBase, config: ConfigParser,
     ):
         """Constructor"""
         super().__init__()
         self._robot = robot
-        config = ConfigParser()
-        config.read(config_path)
+        self._config = ConfigParser()
         self._load_config(config)
         self._initialize_commands()
 
@@ -89,13 +87,12 @@ class DeadReckoningScore(CommandGroupBase):
     _wait_time: float = None
 
     def __init__(
-        self, robot, config_path: str = "/home/lvuser/py/configs/autonomous.ini"
+            self, robot: IterativeRobotBase, config: ConfigParser
     ):
         """Constructor"""
         super().__init__()
         self._robot = robot
-        config = ConfigParser()
-        config.read(config_path)
+        self._config = config
         self._load_config(config)
         self._initialize_commands()
 
@@ -130,15 +127,14 @@ class ShootScore(CommandGroupBase):
     _vacuum_time: float = None
 
     def __init__(
-        self, 
-        robot, 
-        config_path: str = "/home/lvuser/py/configs/autonomous.ini"
+            self,
+            robot: IterativeRobotBase,
+            config: ConfigParser
     ):
         """Constructor"""
         super().__init__()
         self._robot = robot
-        config = ConfigParser()
-        config.read(config_path)
+        self._config = config
         self._load_config(config)
         self._initialize_commands()
 
@@ -154,9 +150,9 @@ class ShootScore(CommandGroupBase):
         self.addSequential(command)
         command = WaitCommand(self._wait_time)
         self.addSequential(command)
-        command = Shoot(self._robot, 1.0, "AutoShoot", self._shoot_time)
+        command = Shoot(self._robot, 1.0, "AutoShoot", int(self._shoot_time))
         self.addSequential(command)
         command = WaitCommand(self._wait_time)
         self.addSequential(command)
-        command = Vacuum(self._robot, -1.0, "AutoVacuum", self._vacuum_time)
+        command = Vacuum(self._robot, -1.0, "AutoVacuum", int(self._vacuum_time))
         self.addSequential(command)

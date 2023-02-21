@@ -1,13 +1,11 @@
 import configparser
 from typing import Optional
 
-from commands2 import SubsystemBase
+from commands2 import SubsystemBase, TimedCommandRobot
 from wpilib import ADXRS450_Gyro
-from wpilib import IterativeRobotBase, PWMMotorController, PWMVictorSPX
+from wpilib import PWMMotorController, PWMVictorSPX
 from wpilib import SmartDashboard
 from wpilib.drive import DifferentialDrive, RobotDriveBase
-
-from commands.tank_drive import TankDrive
 
 
 class Drivetrain(SubsystemBase):
@@ -32,7 +30,7 @@ class Drivetrain(SubsystemBase):
     # Default arcade drive rotation modifier to -1 for DifferentialDrive
     _arcade_rotation_modifier: float = -1
 
-    _robot: IterativeRobotBase = None
+    _robot: TimedCommandRobot = None
     _config: configparser.ConfigParser = None
 
     _left_motor: PWMMotorController = None
@@ -47,29 +45,16 @@ class Drivetrain(SubsystemBase):
 
     def __init__(
         self,
-        robot: IterativeRobotBase,
-        name: str = "Drivetrain",
-        configfile="/home/lvuser/py/configs/subsystems.ini",
+        robot: TimedCommandRobot,
+        config: configparser.ConfigParser,
     ):
         self._robot = robot
-        self._config = configparser.ConfigParser()
-        self._config.read(configfile)
+        self._config = config
         self._init_components()
         self._update_smartdashboard_sensors(self._gyro_angle)
         Drivetrain._update_smartdashboard_tank_drive(0.0, 0.0)
         Drivetrain._update_smartdashboard_arcade_drive(0.0, 0.0)
-        self.setName(name)
         super().__init__()
-
-    def initDefaultCommand(self):
-        self.setDefaultCommand(
-            TankDrive(
-                self._robot,
-                "TankDrive",
-                modifier_scaling=self._modifier_scaling,
-                dpad_scaling=self._dpad_scaling,
-            )
-        )
 
     def get_gyro_angle(self) -> float:
         if self._gyro:
@@ -173,3 +158,9 @@ class Drivetrain(SubsystemBase):
         if self._left_motor and self._right_motor:
             self._robot_drive = DifferentialDrive(self._left_motor, self._right_motor)
             self._robot_drive.setSafetyEnabled(False)
+
+    def left_motor(self) -> PWMMotorController:
+        return self._left_motor
+
+    def right_motor(self) -> PWMMotorController:
+        return self._right_motor

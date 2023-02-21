@@ -1,18 +1,18 @@
-from commands2 import Command
-from wpilib import IterativeRobotBase
-from oi import JoystickAxis, UserController, JoystickButtons
+from commands2 import Command, TimedCommandRobot
 from commands2 import Subsystem
 
+from oi import JoystickAxis, UserController, JoystickButtons
+
+
 class TankDrive(Command):
-    _robot: IterativeRobotBase = None
+    _robot: TimedCommandRobot = None
 
     _dpad_scaling: float
     _stick_scaling: float
 
     def __init__(
         self,
-        robot: IterativeRobotBase,
-        name: str = "TankDrive",
+        robot: TimedCommandRobot,
         modifier_scaling: float = 0.5,
         dpad_scaling: float = 0.4,
         timeout: int = 15,
@@ -33,7 +33,6 @@ class TankDrive(Command):
         robot tipping)
         """
         super().__init__()
-        self.setName(name)
         self._robot = robot
         self.withTimeout(timeout)
         self._dpad_scaling = dpad_scaling
@@ -45,34 +44,34 @@ class TankDrive(Command):
 
     def execute(self):
         """Called repeatedly when this Command is scheduled to run"""
-        modifier: bool = self._robot.oi.get_button_state(
+        modifier: bool = self._robot.oi().get_button_state(
             UserController.DRIVER, JoystickButtons.LEFTBUMPER
         )
-        dpad_y: float = self._robot.oi.get_axis(
+        dpad_y: float = self._robot.oi().get_axis(
             UserController.DRIVER, JoystickAxis.DPADY
         )
         if dpad_y != 0.0:
-            self._robot.drivetrain.arcade_drive(self._dpad_scaling * dpad_y, 0.0)
+            self._robot.drivetrain().arcade_drive(self._dpad_scaling * dpad_y, 0.0)
         else:
-            left_track: float = self._robot.oi.get_axis(
+            left_track: float = self._robot.oi().get_axis(
                 UserController.DRIVER, JoystickAxis.LEFTY
             )
-            right_track: float = self._robot.oi.get_axis(
+            right_track: float = self._robot.oi().get_axis(
                 UserController.DRIVER, JoystickAxis.RIGHTY
             )
             if modifier:
-                self._robot.drivetrain.tank_drive(
+                self._robot.drivetrain().tank_drive(
                     self._stick_scaling * left_track, self._stick_scaling * right_track
                 )
             else:
-                self._robot.drivetrain.tank_drive(left_track, right_track)
+                self._robot.drivetrain().tank_drive(left_track, right_track)
         return Command.execute(self)
 
     def isFinished(self):
         """Returns true when the Command no longer needs to be run"""
         return False
 
-    def end(self):
+    def end(self, **kwargs):
         """Called once after isFinished returns true"""
         pass
 
@@ -81,4 +80,4 @@ class TankDrive(Command):
         pass
     
     def getRequirements(self) -> set[Subsystem]:
-        return {self._robot.drivetrain}
+        return {self._robot._drivetrain}

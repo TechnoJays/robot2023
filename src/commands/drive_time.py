@@ -51,4 +51,4 @@ class DriveTime(Command):
         self.end()
     
     def getRequirements(self) -> set[Subsystem]:
-        return {self._robot.drivetrain}
+        return {self._robot.controller().drivetrain()}

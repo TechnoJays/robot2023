@@ -6,9 +6,7 @@ from subsystems.drivetrain import Drivetrain
 
 @pytest.fixture(scope="function")
 def drivetrain_default(robot: IterativeRobotBase):
-    return Drivetrain(
-        robot, "TestDrivetrain", "../tests/test_configs/drivetrain_default.ini"
-    )
+    return Drivetrain(robot, "TestDrivetrain", "../tests/test_configs/drivetrain_default.ini")
 
 
 @pytest.fixture(scope="function")
