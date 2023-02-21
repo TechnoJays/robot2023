@@ -5,17 +5,12 @@ from oi import JoystickAxis, UserController, JoystickButtons
 
 
 class TankDrive(Command):
-    _robot: TimedCommandRobot = None
-
-    _dpad_scaling: float
-    _stick_scaling: float
 
     def __init__(
         self,
         robot: TimedCommandRobot,
         modifier_scaling: float = 0.5,
         dpad_scaling: float = 0.4,
-        timeout: int = 15,
     ):
         """
         Constructor
@@ -34,7 +29,6 @@ class TankDrive(Command):
         """
         super().__init__()
         self._robot = robot
-        self.withTimeout(timeout)
         self._dpad_scaling = dpad_scaling
         self._stick_scaling = modifier_scaling
 
