@@ -9,7 +9,7 @@ Southfield High School Team 94 (NinetyFouriors) robot.
 
 ### Development Requirements
 
-* **Python 3.8**: This codebase uses Python 3.8
+* **Python 3.11**: This codebase uses Python 3.11
 * [pyfrc]: Be sure to follow the [pyfrc instructions] for the latest roboPy setup. This is largely handled by the install of this project mentioned below.
 
 It is highly recommended that you use an python environment manager with python to help as the version
@@ -17,9 +17,9 @@ of python required by pyfrc changes.
 
 * [pyenv] is useful for managing multiple python versions (3.8) on your computer: **NOTE your python version and pip version/dependencies are highly correlated**
   * `brew install pyenv` for macOS and [Homebrew]
-  * `scoop install python` with [Scoop] is the closest thing if you have the misfortune to be using Windows and possibly follow [this page] for more instructions on supporting different python versions
+    * `scoop install python` with [Scoop] is the closest thing if you have the misfortune to be using Windows and possibly follow [this page] for more instructions on supporting different python versions
   * [pipenv] is useful for dependency management for this project as well
-  * `pipenv --python 3.8` to create a python 3.8 environment for this project
+  * `pipenv --python 3.11` to create a python 3.8 environment for this project
   * `pipenv install -e .` to setup this project in the created virtualenv
   * `pipenv shell` to enter the environment for this project
   * `tox` after that to run the tests
@@ -74,10 +74,10 @@ Note that the RobotPy deployment process will automatically run the tests for th
 part of the deployment to try and protect us from ourselves.
 
 ```bash
-python3 robot.py deploy
+python3 robot.py deploy --netconsole
 
 # in the virtual environment python3 may not be available
-python robot.py deploy
+python robot.py deploy --netconsole
 ```
 
 ## Running Tests
@@ -97,6 +97,19 @@ python robot.py deploy
 
 `tox` is running `python src/robot.py coverage test` from [RobotPy Unit Testing]
 
+If you would like to run the tests without coverage, you can execute
+
+```bash
+python src/robot.py test
+```
+
+And individual tests can be run by passing pytest arguments to the `test` option of the [pyfrc] test command
+
+```bash
+python src/robot.py test -- ./tests/test_oi.py
+```
+
+TODO setup github actions for the robot code.
 
 [FIRST Robotics FRC]: http://www.usfirst.org/
 [pyfrc]: https://github.com/robotpy/pyfrc
