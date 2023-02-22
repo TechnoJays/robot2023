@@ -1,13 +1,12 @@
 from configparser import ConfigParser
 
-from commands2 import CommandGroupBase, TimedCommandRobot
+from commands2 import CommandGroupBase
 from commands2 import WaitCommand
 from wpilib import IterativeRobotBase
 
 from commands.drive_time import DriveTime
 from commands.raise_shooter import RaiseShooter
-from commands.shoot import Shoot
-from commands.vacuum import Vacuum
+from subsystems.drivetrain import Drivetrain
 
 
 def use_drive_gyro(robot) -> bool:
@@ -19,29 +18,24 @@ class MoveFromLine(CommandGroupBase):
     _DRIVE_SPEED = "DRIVE_SPEED"
     _DRIVE_TIME = "DRIVE_TIME"
 
-    _robot: TimedCommandRobot = None
-
-    _drive_speed: float = None
-    _drive_time: float = None
-
     def __init__(
             self,
-            robot: TimedCommandRobot,
+            drivetrain: Drivetrain,
             config: ConfigParser,
     ):
         """Constructor"""
         super().__init__()
-        self._robot = robot
         self._config = config
         self._load_config(config)
         self._initialize_commands()
+        self._drivetrain = drivetrain
 
     def _load_config(self, parser: ConfigParser):
         self._drive_speed = parser.getfloat(self._SECTION, self._DRIVE_SPEED)
         self._drive_time = parser.getfloat(self._SECTION, self._DRIVE_TIME)
 
     def _initialize_commands(self):
-        command = DriveTime(self._robot, self._drive_time, self._drive_speed)
+        command = DriveTime(self._drivetrain, self._drive_time, self._drive_speed)
         self.addSequential(command)
 
 
@@ -150,9 +144,9 @@ class ShootScore(CommandGroupBase):
         self.addSequential(command)
         command = WaitCommand(self._wait_time)
         self.addSequential(command)
-        command = Shoot(self._robot, 1.0, "AutoShoot", int(self._shoot_time))
-        self.addSequential(command)
+        # command = Shoot(self._robot, 1.0, "AutoShoot", int(self._shoot_time))
+        # self.addSequential(command)
         command = WaitCommand(self._wait_time)
         self.addSequential(command)
-        command = Vacuum(self._robot, -1.0, "AutoVacuum", int(self._vacuum_time))
-        self.addSequential(command)
+        # command = Vacuum(self._robot, -1.0, "AutoVacuum", int(self._vacuum_time))
+        # self.addSequential(command)

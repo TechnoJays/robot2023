@@ -1,7 +1,7 @@
 # Copyright (c) Southfield High School Team 94
 # Open Source Software; you can modify and / or share it under the terms of
 # the MIT license file in the root directory of this project
-import configparser, traceback
+import configparser
 from configparser import ConfigParser
 
 import wpilib
@@ -9,10 +9,7 @@ from commands2 import SubsystemBase, CommandBase, TimedCommandRobot
 
 from oi import OI
 from subsystems.arm import Arm
-from subsystems.climbing import Climbing
 from subsystems.drivetrain import Drivetrain
-from subsystems.shooter import Shooter
-from subsystems.vacuum import Vacuum
 
 
 class RobotController:
@@ -26,14 +23,6 @@ class RobotController:
     JOYSTICK_CONFIG_PATH = "/home/lvuser/py/configs/joysticks.ini"
     AUTONOMOUS_CONFIG_PATH = "/home/lvuser/py/configs/autonomous.ini"
 
-    _robot: TimedCommandRobot = None
-
-    _oi: OI = None
-    _drivetrain: Drivetrain = None
-    _arm: Arm = None
-    _climbing: Climbing = None
-    _shooter: Shooter = None
-    _vacuum: Vacuum = None
     _autonomous_command: CommandBase = None
 
     _subsystems_config: ConfigParser = None
@@ -43,7 +32,7 @@ class RobotController:
     def __init__(self, robot: TimedCommandRobot) -> None:
         self._robot = robot
         self._init_config()
-        self._init_subsystems(robot)
+        self._init_subsystems()
 
     def _init_config(self) -> None:
         """
@@ -58,17 +47,20 @@ class RobotController:
         self._autonomous_config = configparser.ConfigParser()
         self._autonomous_config.read(self.AUTONOMOUS_CONFIG_PATH)
 
-    def _init_subsystems(self, robot: TimedCommandRobot) -> list[SubsystemBase]:
+    def _init_subsystems(self) -> list[SubsystemBase]:
         """
         Initialize subsystems managed by the robot controller
         """
         subsystems = []
 
-        self._oi = OI(robot, self._joystick_config)
+        self._oi = OI(self._joystick_config)
         subsystems.append(self._oi)
 
-        self._drivetrain = Drivetrain(robot, self._subsystems_config)
+        self._drivetrain = Drivetrain(self._subsystems_config)
         subsystems.append(self._drivetrain)
+
+        self._arm = Arm(self._subsystems_config)
+        subsystems.append(self._arm)
 
         wpilib.CameraServer.launch()
 
@@ -79,7 +71,6 @@ class RobotController:
         A method to connect subsystems, the operator interface, and autonomous once
         all the subsystems have been initialized
         """
-        self.oi().init_button_bindings()
         self.oi().map_commands(self.drivetrain(), self.arm())
 
     def get_auto_choice(self) -> CommandBase:
@@ -102,10 +93,3 @@ class RobotController:
         Retrieve the operator interface managed by the robot controller
         """
         return self._oi
-
-    def vacuum(self) -> Vacuum:
-        print("**** invalid vacuum accessed here:")
-        traceback.print_stack()
-        return Vacuum()
-
-

@@ -1,16 +1,18 @@
-from commands2 import Command, TimedCommandRobot
+from commands2 import Command
 from commands2 import Subsystem
 
-from oi import JoystickAxis, UserController, JoystickButtons
+from oi import JoystickAxis, UserController, JoystickButtons, OI
+from subsystems.drivetrain import Drivetrain
 
 
 class TankDrive(Command):
 
     def __init__(
-        self,
-        robot: TimedCommandRobot,
-        modifier_scaling: float = 0.5,
-        dpad_scaling: float = 0.4,
+            self,
+            oi: OI,
+            drivetrain: Drivetrain,
+            modifier_scaling: float = 0.5,
+            dpad_scaling: float = 0.4,
     ):
         """
         Constructor
@@ -28,7 +30,8 @@ class TankDrive(Command):
         robot tipping)
         """
         super().__init__()
-        self._robot = robot
+        self._oi = oi
+        self._drivetrain = drivetrain
         self._dpad_scaling = dpad_scaling
         self._stick_scaling = modifier_scaling
 
@@ -38,27 +41,27 @@ class TankDrive(Command):
 
     def execute(self):
         """Called repeatedly when this Command is scheduled to run"""
-        modifier: bool = self._robot.oi().get_button_state(
+        modifier: bool = self.oi.get_button_state(
             UserController.DRIVER, JoystickButtons.LEFTBUMPER
         )
-        dpad_y: float = self._robot.oi().get_axis(
+        dpad_y: float = self.oi.get_axis(
             UserController.DRIVER, JoystickAxis.DPADY
         )
         if dpad_y != 0.0:
-            self._robot.drivetrain().arcade_drive(self._dpad_scaling * dpad_y, 0.0)
+            self.drivetrain.arcade_drive(self._dpad_scaling * dpad_y, 0.0)
         else:
-            left_track: float = self._robot.oi().get_axis(
+            left_track: float = self.oi.get_axis(
                 UserController.DRIVER, JoystickAxis.LEFTY
             )
-            right_track: float = self._robot.oi().get_axis(
+            right_track: float = self.oi.get_axis(
                 UserController.DRIVER, JoystickAxis.RIGHTY
             )
             if modifier:
-                self._robot.drivetrain().tank_drive(
+                self.drivetrain.tank_drive(
                     self._stick_scaling * left_track, self._stick_scaling * right_track
                 )
             else:
-                self._robot.drivetrain().tank_drive(left_track, right_track)
+                self.drivetrain.tank_drive(left_track, right_track)
         return Command.execute(self)
 
     def isFinished(self):
@@ -72,6 +75,22 @@ class TankDrive(Command):
     def interrupted(self):
         """Called when another command which requires one or more of the same subsystems is scheduled to run"""
         pass
-    
+
     def getRequirements(self) -> set[Subsystem]:
-        return {self._robot._drivetrain}
+        return {self.drivetrain}
+
+    @property
+    def drivetrain(self) -> Drivetrain:
+        return self._drivetrain
+
+    @property
+    def dpad_scaling(self) -> float:
+        return self._dpad_scaling
+
+    @property
+    def stick_scaling(self):
+        return self._stick_scaling
+
+    @property
+    def oi(self) -> OI:
+        return self._oi

@@ -2,7 +2,6 @@ from configparser import ConfigParser
 
 import pytest
 from commands2._impl.button import JoystickButton
-from wpilib import IterativeRobotBase
 
 from commands.autonomous import MoveFromLine
 from oi import JoystickAxis, JoystickButtons, OI
@@ -21,20 +20,22 @@ def config_joy_ports_01() -> ConfigParser:
     config.read("./test_configs/joysticks_ports_0_1.ini")
     return config
 
+
 @pytest.fixture(scope="function")
 def config_auto() -> ConfigParser:
     config = ConfigParser()
     config.read("./test_configs/autonomous_default.ini")
     return config
 
+
 @pytest.fixture(scope="function")
-def oi_default(robot: IterativeRobotBase, config_default: ConfigParser) -> OI:
-    return OI(robot, config_default)
+def oi_default(config_default: ConfigParser) -> OI:
+    return OI(config_default)
 
 
 @pytest.fixture(scope="function")
-def oi_joy_ports(robot: IterativeRobotBase, config_joy_ports_01: ConfigParser) -> OI:
-    return OI(robot, config_joy_ports_01)
+def oi_joy_ports(config_joy_ports_01: ConfigParser) -> OI:
+    return OI(config_joy_ports_01)
 
 
 def test__init_joystick(oi_joy_ports: OI, config_joy_ports_01: ConfigParser):
@@ -94,21 +95,26 @@ def test__init_button_bindings(oi_default):
     assert oi_default.release_button() is not None
     assert type(oi_default.release_button()) is JoystickButton
 
+
 @pytest.mark.skip(reason="requires setup_autonomous_dashboard")
 def test_get_auto_choice():
     assert False
+
 
 @pytest.mark.skip(reason="unimplemented for lack of time")
 def test_get_position():
     assert False
 
+
 @pytest.mark.skip(reason="no important game message (panel color) for 2023 game")
 def test_get_game_message():
     assert False
 
+
 @pytest.mark.skip(reason="reserved for later sophisticated pyfrc/robotpy testing")
 def test_get_axis():
     assert False
+
 
 @pytest.mark.skip(reason="reserved for later sophisticated pyfrc/robotpy testing")
 def test_get_button_state():

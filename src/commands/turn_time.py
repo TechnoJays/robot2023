@@ -1,27 +1,21 @@
 from commands2 import Command
-from wpilib import IterativeRobotBase
-from util.stopwatch import Stopwatch
 from commands2 import Subsystem
 
+from subsystems.drivetrain import Drivetrain
+from util.stopwatch import Stopwatch
+
+
 class TurnTime(Command):
-    _stopwatch: Stopwatch = None
-    _duration: float = None
-    _speed: float = None
-    _robot: IterativeRobotBase = None
 
     def __init__(
-        self,
-        robot: IterativeRobotBase,
-        duration: float,
-        speed: float,
-        name: str = "TurnTime",
-        timeout: int = 15,
+            self,
+            drivetrain: Drivetrain,
+            duration: float,
+            speed: float,
     ):
         """Constructor"""
         super().__init__()
-        self.setName(name)
-        self._robot = robot
-        self.withTimeout(timeout)
+        self._drivetrain = drivetrain
         self._stopwatch = Stopwatch()
         self._duration = duration
         self._speed = speed
@@ -39,10 +33,10 @@ class TurnTime(Command):
     def isFinished(self):
         """Returns true when the Command no longer needs to be run"""
         return (
-            self._stopwatch.elapsed_time_in_secs() >= self._duration
+                self._stopwatch.elapsed_time_in_secs() >= self._duration
         )
 
-    def end(self):
+    def end(self, **kwargs):
         """Called once after isFinished returns true"""
         self._stopwatch.stop()
         self._robot.drivetrain.arcade_drive(0.0, 0.0)
@@ -52,4 +46,20 @@ class TurnTime(Command):
         self.end()
 
     def getRequirements(self) -> set[Subsystem]:
-        return { self._robot.drivetrain }
+        return {self._drivetrain}
+
+    @property
+    def drivetrain(self):
+        return self._drivetrain
+
+    @property
+    def speed(self):
+        return self._speed
+
+    @property
+    def stopwatch(self):
+        return self._stopwatch
+
+    @property
+    def duration(self):
+        return self._duration

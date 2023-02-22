@@ -1,52 +1,52 @@
+from configparser import ConfigParser
+
 import pytest
 from wpilib import IterativeRobotBase
+from wpilib.simulation import PWMSim
+
 from commands.turn_time import TurnTime
 from subsystems.drivetrain import Drivetrain
 from util.stopwatch import Stopwatch
 
-from wpilib.simulation import PWMSim
+
+@pytest.fixture(scope="function")
+def config_default() -> ConfigParser:
+    config = ConfigParser()
+    config.read("./test_configs/drivetrain_default.ini")
+    return config
 
 
 @pytest.fixture(scope="function")
-def drivetrain_default(robot: IterativeRobotBase):
-    return Drivetrain(robot, "TestDrivetrain", "../tests/test_configs/drivetrain_default.ini")
+def drivetrain_default(config_default: ConfigParser):
+    return Drivetrain(config_default)
 
 
 @pytest.fixture(scope="function")
 def command_default(robot: IterativeRobotBase, drivetrain_default: Drivetrain):
     robot.drivetrain = drivetrain_default
-    return TurnTime(robot, 5, 1.0, "TestTurnTime", 15)
+    return TurnTime(drivetrain_default, 5, 1.0)
 
 
 def test_init_default(command_default: TurnTime):
     assert command_default is not None
-    assert command_default._robot is not None
-    assert command_default._robot.drivetrain is not None
-    assert command_default._stopwatch is not None
-    # assert command_default.getName() == "TestTurnTime"
-    # Get timeout no longer available
-    # assert command_default.timeout == 15
-    assert command_default._duration == 5
-    assert command_default._speed == 1.0
+    assert command_default.drivetrain is not None
+    assert command_default.stopwatch is not None
+    assert command_default.duration == 5
+    assert command_default.speed == 1.0
 
 
-def test_init_full(robot: IterativeRobotBase, drivetrain_default: Drivetrain):
-    robot.drivetrain = drivetrain_default
-    dt = TurnTime(robot, 10, 0.5, "CustomTurnTime", 5)
+def test_init_full(drivetrain_default: Drivetrain):
+    dt = TurnTime(drivetrain_default, 10, 0.5)
     assert dt is not None
-    assert dt._robot is not None
-    assert dt._robot.drivetrain is not None
-    assert dt._stopwatch is not None
-    # assert dt.getName() == "CustomTurnTime"
-    # Get timeout no longer available
-    # assert dt.timeout == 5
-    assert dt._duration == 10
-    assert dt._speed == 0.5
+    assert dt.drivetrain is not None
+    assert dt.stopwatch is not None
+    assert dt.duration == 10
+    assert dt.speed == 0.5
 
 
 def test_initialize(command_default: TurnTime):
     command_default.initialize()
-    assert command_default._stopwatch._running
+    assert command_default.stopwatch._running
 
 
 @pytest.mark.parametrize(
@@ -60,14 +60,12 @@ def test_initialize(command_default: TurnTime):
     ],
 )
 def test_execute(
-    robot: IterativeRobotBase,
-    drivetrain_default: Drivetrain,
-    speed: float,
-    left_ex_speed: float,
-    right_ex_speed: float,
+        drivetrain_default: Drivetrain,
+        speed: float,
+        left_ex_speed: float,
+        right_ex_speed: float,
 ):
-    robot.drivetrain = drivetrain_default
-    dt = TurnTime(robot, 5, speed, "CustomTurnTime", 15)
+    dt = TurnTime(drivetrain_default, 5, speed)
     assert dt is not None
 
     left_m = PWMSim(drivetrain_default._left_motor.getChannel())
@@ -102,16 +100,14 @@ def isclose(a, b, rel_tol=0.1, abs_tol=0.0):
     ],
 )
 def test_command_full(
-    robot: IterativeRobotBase,
-    drivetrain_default: Drivetrain,
-    duration: float,
-    timeout: float,
-    speed: float,
-    left_ex_speed: float,
-    right_ex_speed: float,
+        drivetrain_default: Drivetrain,
+        duration: float,
+        timeout: float,
+        speed: float,
+        left_ex_speed: float,
+        right_ex_speed: float,
 ):
-    robot.drivetrain = drivetrain_default
-    dt = TurnTime(robot, duration, speed, "CustomTurnTime", timeout)
+    dt = TurnTime(drivetrain_default, duration, speed)
     sw = Stopwatch()
     assert dt is not None
 

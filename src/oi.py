@@ -76,10 +76,8 @@ class OI:
 
     def __init__(
             self,
-            robot: TimedCommandRobot,
             config: configparser.ConfigParser,
     ):
-        self._robot = robot
         self._config = config
 
         self._controllers: list[Joystick] = []
@@ -138,7 +136,7 @@ class OI:
     def _setup_autonomous_smartdashboard(self, autonomous_config: configparser.ConfigParser):
         self._auto_program_chooser = SendableChooser()
         self._auto_program_chooser.setDefaultOption(
-            "Move From Line", MoveFromLine(self._robot, autonomous_config)
+            "Move From Line", MoveFromLine(autonomous_config)
         )
         SmartDashboard.putData("Autonomous", self._auto_program_chooser)
 

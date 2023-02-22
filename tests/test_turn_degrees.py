@@ -1,30 +1,38 @@
-from commands2 import Command
-import pytest
-from wpilib import IterativeRobotBase
-from commands.turn_degrees import TurnDegrees
-from subsystems.drivetrain import Drivetrain
+from configparser import ConfigParser
 
+import pytest
 from wpilib.simulation import AnalogGyroSim
 from wpilib.simulation import PWMSim
 
-
-@pytest.fixture(scope="function")
-def drivetrain_default(robot: IterativeRobotBase):
-    return Drivetrain(robot, "TestDrivetrain", "../tests/test_configs/drivetrain_default.ini")
+from commands.turn_degrees import TurnDegrees
+from subsystems.drivetrain import Drivetrain
 
 
 @pytest.fixture(scope="function")
-def command_default(robot: IterativeRobotBase, drivetrain_default: Drivetrain):
-    robot.drivetrain = drivetrain_default
-    return TurnDegrees(robot, 90.0, 1.0, 2.0, "TestTurnDegrees", 15)
+def config_default() -> ConfigParser:
+    config = ConfigParser()
+    config.read("./test_configs/drivetrain_default.ini")
+    return config
+
+
+@pytest.fixture(scope="function")
+def drivetrain_default(config_default: ConfigParser):
+    return Drivetrain(config_default)
+
+
+@pytest.fixture(scope="function")
+def command_default(drivetrain_default: Drivetrain):
+    turn_degrees = TurnDegrees(drivetrain_default, 90.0, 1.0, 2.0)
+    turn_degrees.setName("TestTurnDegrees")
+    return turn_degrees
 
 
 @pytest.mark.skip(reason="The Gyro is no longer on the robot")
-def update_gyro(drivetrain_default: Drivetrain, command_default: Command):
-    gyro_sim = AnalogGyroSim(drivetrain_default._gyro.getChannel())
+def update_gyro(drivetrain_default: Drivetrain, command_default: TurnDegrees):
+    gyro_sim = AnalogGyroSim(drivetrain_default.gyro.getChannel())
 
     current = gyro_sim.getAngle()
-    degrees_left = command_default._target_degrees - current
+    degrees_left = command_default.target_degrees - current
     if degrees_left >= 0:
         gyro_sim.setAngle(gyro_sim.getAngle() + 1.0)
     else:
@@ -37,28 +45,23 @@ def isclose(a, b, rel_tol=0.1, abs_tol=0.0):
 
 def test_init_default(command_default: TurnDegrees):
     assert command_default is not None
-    assert command_default._robot is not None
-    assert command_default._robot.drivetrain is not None
-    # assert command_default.getName() == "TestTurnDegrees"
-    # Timeout is no longer accessible
-    # assert command_default.timeout == 15
-    assert command_default._speed == 1.0
-    assert command_default._degrees_change == 90.0
-    assert command_default._degree_threshold == 2.0
+    assert command_default.drivetrain is not None
+    assert command_default.getName() is not None
+    assert command_default.getName() == "TestTurnDegrees"
+    assert command_default.speed == 1.0
+    assert command_default.degrees_change == 90.0
+    assert command_default.degree_threshold == 2.0
 
 
-def test_init_full(robot: IterativeRobotBase, drivetrain_default: Drivetrain):
-    robot.drivetrain = drivetrain_default
-    td = TurnDegrees(robot, -30.0, 0.5, 5.0, "CustomTurnDegrees", 5)
+def test_init_full(drivetrain_default: Drivetrain):
+    td = TurnDegrees(drivetrain_default, -30.0, 0.5, 5.0)
+    td.setName("CustomTurnDegrees")
     assert td is not None
-    assert td._robot is not None
-    assert td._robot.drivetrain is not None
-    # assert td.getName() == "CustomTurnDegrees"
-    # Timeout is no longer accessible
-    # assert td.timeout == 5
-    assert td._speed == 0.5
-    assert td._degrees_change == -30.0
-    assert td._degree_threshold == 5.0
+    assert td.drivetrain is not None
+    assert td.getName() == "CustomTurnDegrees"
+    assert td.speed == 0.5
+    assert td.degrees_change == -30.0
+    assert td.degree_threshold == 5.0
 
 
 def test_initialize(command_default: TurnDegrees):
@@ -78,22 +81,21 @@ def test_initialize(command_default: TurnDegrees):
     ],
 )
 def test_execute(
-    robot: IterativeRobotBase,
-    drivetrain_default: Drivetrain,
-    initial_angle: float,
-    target_angle: float,
-    threshold: float,
-    speed: float,
-    left_ex_speed: float,
-    right_ex_speed: float,
+        drivetrain_default: Drivetrain,
+        initial_angle: float,
+        target_angle: float,
+        threshold: float,
+        speed: float,
+        left_ex_speed: float,
+        right_ex_speed: float,
 ):
-    robot.drivetrain = drivetrain_default
-    td = TurnDegrees(robot, target_angle, speed, threshold, "CustomTurnDegrees", 15)
+    td = TurnDegrees(drivetrain_default, target_angle, speed, threshold)
     assert td is not None
+    assert td.drivetrain is not None
 
     # and: the robot drive motors are real
-    left_m = PWMSim(drivetrain_default._left_motor.getChannel())
-    right_m = PWMSim(drivetrain_default._right_motor.getChannel())
+    left_m = PWMSim(drivetrain_default.left_motor.getChannel())
+    right_m = PWMSim(drivetrain_default.right_motor.getChannel())
 
     # hal_data['analog_gyro'][1]['angle'] = initial_angle
     td.initialize()
@@ -114,17 +116,15 @@ def test_execute(
     ],
 )
 def test_is_finished(
-    robot,
-    drivetrain_default,
-    hal_data,
-    initial_angle,
-    target_angle,
-    threshold,
-    fake_angle,
-    finished,
+        drivetrain_default: Drivetrain,
+        hal_data: dict,
+        initial_angle: float,
+        target_angle: float,
+        threshold: float,
+        fake_angle: float,
+        finished: float,
 ):
-    robot.drivetrain = drivetrain_default
-    td = TurnDegrees(robot, target_angle, 1.0, threshold, "CustomTurnDegrees", 15)
+    td = TurnDegrees(drivetrain_default, target_angle, 1.0, threshold)
     assert td is not None
     hal_data["analog_gyro"][1]["angle"] = initial_angle
     td.initialize()
@@ -144,17 +144,15 @@ def test_is_finished(
     ],
 )
 def test_command_full(
-    robot,
-    drivetrain_default,
-    initial_angle,
-    target_angle,
-    threshold,
-    speed,
-    left_ex_speed,
-    right_ex_speed,
+        drivetrain_default: Drivetrain,
+        initial_angle: float,
+        target_angle: float,
+        threshold: float,
+        speed: float,
+        left_ex_speed: float,
+        right_ex_speed: float,
 ):
-    robot.drivetrain = drivetrain_default
-    td = TurnDegrees(robot, target_angle, speed, threshold, "CustomTurnDegrees", 15)
+    td = TurnDegrees(drivetrain_default, target_angle, speed, threshold)
     assert td is not None
     # hal_data['analog_gyro'][1]['angle'] = initial_angle
     td.initialize()

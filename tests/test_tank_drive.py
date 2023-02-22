@@ -1,19 +1,29 @@
-from commands2 import Command
+from configparser import ConfigParser
+
 import pytest
+from commands2 import Command
 from wpilib import IterativeRobotBase
+from wpilib.simulation import PWMSim
+
 import oi
 from commands.tank_drive import TankDrive
 from subsystems.drivetrain import Drivetrain
-from wpilib.simulation import PWMSim
 
 
 @pytest.fixture(scope="function")
-def drivetrain_default(robot: IterativeRobotBase):
-    return Drivetrain(robot, "TestDriveTrain", "../tests/test_configs/drivetrain_default.ini")
+def config_default() -> ConfigParser:
+    config = ConfigParser()
+    config.read("./test_configs/drivetrain_default.ini")
+    return config
 
 
 @pytest.fixture(scope="function")
-def mock_oi(robot: IterativeRobotBase):
+def drivetrain_default(config_default: ConfigParser):
+    return Drivetrain(config_default)
+
+
+@pytest.fixture(scope="function")
+def mock_oi():
     class OI:
         driver_axis_values = {
             oi.JoystickAxis.LEFTX: 0.0,
@@ -81,35 +91,29 @@ def mock_oi(robot: IterativeRobotBase):
 
 
 @pytest.fixture(scope="function")
-def command_default(robot: IterativeRobotBase, drivetrain_default: Drivetrain):
-    robot.drivetrain = drivetrain_default
-    return TankDrive(robot, "TestTankDrive", modifier_scaling=1.0, dpad_scaling=1.0)
+def command_default(mock_oi: oi.OI, drivetrain_default: Drivetrain):
+    tank_drive = TankDrive(mock_oi, drivetrain_default, modifier_scaling=1.0, dpad_scaling=1.0)
+    tank_drive.setName("TestTankDrive")
+    return tank_drive
 
 
-def test_init_default(command_default: TankDrive):
+def test_init_default(command_default: TankDrive, mock_oi: oi.OI, drivetrain_default: Drivetrain):
     assert command_default is not None
-    assert command_default._robot is not None
-    assert command_default._robot.drivetrain is not None
-    # assert command_default.getName() == "TestTankDrive"
-    # Timeout no longer accessible
-    # assert command_default.timeout == -1
-    assert command_default._dpad_scaling == 1.0
-    assert command_default._stick_scaling == 1.0
+    assert command_default.oi is not None
+    assert command_default.oi == mock_oi
+    assert command_default.drivetrain is not None
+    assert command_default.drivetrain == drivetrain_default
+    assert command_default.getName() == "TestTankDrive"
+    assert command_default.dpad_scaling == 1.0
+    assert command_default.stick_scaling == 1.0
 
 
-def test_init_full(robot: IterativeRobotBase, drivetrain_default: Drivetrain):
-    robot.drivetrain = drivetrain_default
-    td = TankDrive(
-        robot, "CustomTankDrive", modifier_scaling=0.7, dpad_scaling=0.3, timeout=5
-    )
+def test_init_full(mock_oi: oi.OI, drivetrain_default: Drivetrain):
+    td = TankDrive(mock_oi, drivetrain_default, modifier_scaling=0.7, dpad_scaling=0.3)
     assert td is not None
-    assert td._robot is not None
-    assert td._robot.drivetrain is not None
-    # assert td.getName() == "CustomTankDrive"
-    assert td._stick_scaling == 0.7
-    assert td._dpad_scaling == 0.3
-    # Timeout no longer accessible
-    # assert td.timeout == 5
+    assert td.drivetrain is not None
+    assert td.stick_scaling == 0.7
+    assert td.dpad_scaling == 0.3
 
 
 def test_initialize(command_default: Command):
@@ -142,23 +146,21 @@ def test_initialize(command_default: Command):
     ],
 )
 def test_execute(
-    mock_oi,
-    drivetrain_default: Drivetrain,
-    robot: IterativeRobotBase,
-    stick_scale: float,
-    dpad_scale: float,
-    left_input: float,
-    right_input: float,
-    dpad_input: float,
-    modifier_input: bool,
-    left_ex_speed: float,
-    right_ex_speed: float,
+        mock_oi,
+        drivetrain_default: Drivetrain,
+        robot: IterativeRobotBase,
+        stick_scale: float,
+        dpad_scale: float,
+        left_input: float,
+        right_input: float,
+        dpad_input: float,
+        modifier_input: bool,
+        left_ex_speed: float,
+        right_ex_speed: float,
 ):
     robot.drivetrain = drivetrain_default
     robot.oi = mock_oi
-    td = TankDrive(
-        robot, "TestTankDrive", modifier_scaling=stick_scale, dpad_scaling=dpad_scale
-    )
+    td = TankDrive(mock_oi, drivetrain_default, modifier_scaling=stick_scale, dpad_scaling=dpad_scale)
     assert td is not None
 
     td.initialize()

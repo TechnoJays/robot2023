@@ -5,7 +5,7 @@ from configparser import ConfigParser
 from typing import Optional
 
 from commands2 import SubsystemBase
-from wpilib import IterativeRobotBase, PWMMotorController, PWMVictorSPX, SmartDashboard
+from wpilib import PWMVictorSPX, SmartDashboard
 
 
 class Arm(SubsystemBase):
@@ -19,20 +19,10 @@ class Arm(SubsystemBase):
     MAX_SPEED_KEY = "MAX_SPEED"
     MODIFIER_SCALING_KEY = "MODIFIER_SCALING"
 
-    _robot: IterativeRobotBase = None
-
-    _enabled: bool = False
-
-    _motor: PWMMotorController = None
-    _max_speed: float = 0.0
-    _modifier_scaling: Optional[float] = None
-
     def __init__(
             self,
-            robot: IterativeRobotBase,
             config: ConfigParser
     ):
-        self._robot = robot
         self._config = config
         self._enabled = self._config.getboolean(
             Arm.GENERAL_SECTION, Arm.ENABLED_KEY
@@ -43,9 +33,8 @@ class Arm(SubsystemBase):
         super().__init__()
 
     def _init_components(self):
-        self._max_speed = self._config.getfloat(
-            Arm.GENERAL_SECTION, Arm.MAX_SPEED_KEY
-        )
+        self._max_speed = self._config.getfloat(Arm.GENERAL_SECTION, Arm.MAX_SPEED_KEY)
+
         if self._enabled:
             print("*** Arm enabled ****")
             self._motor = PWMVictorSPX(
@@ -55,6 +44,10 @@ class Arm(SubsystemBase):
                 self._config.getboolean(Arm.GENERAL_SECTION, Arm.INVERTED_KEY)
             )
             print("*** Arm PWM Configured ****")
+        else:
+            self._motor = None
+
+        self._modifier_scaling: Optional[float] = None
 
     def move(self, speed: float):
         adjusted_speed = 0.0
