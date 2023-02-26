@@ -3,7 +3,7 @@ from configparser import ConfigParser
 import pytest
 from commands2._impl.button import JoystickButton
 
-from commands.autonomous_commands import MoveFromLine
+from commands.autonomous_drive_commands import MoveFromLine
 from oi import JoystickAxis, JoystickButtons, OI
 from subsystems.drivetrain import Drivetrain
 

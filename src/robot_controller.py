@@ -8,7 +8,7 @@ import wpilib
 from commands2 import SubsystemBase, CommandBase, TimedCommandRobot
 from wpilib import SmartDashboard, SendableChooser
 
-from commands.autonomous_commands import MoveFromLine
+from commands.autonomous_drive_commands import MoveFromLine
 from oi import OI
 from subsystems.arm import Arm
 from subsystems.drivetrain import Drivetrain
