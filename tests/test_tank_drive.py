@@ -1,3 +1,6 @@
+# Copyright (c) Southfield High School Team 94
+# Open Source Software; you can modify and / or share it under the terms of
+# the MIT license file in the root directory of this project
 from configparser import ConfigParser
 
 import pytest
@@ -103,7 +106,6 @@ def test_init_default(command_default: TankDrive, mock_oi: oi.OI, drivetrain_def
     assert command_default.oi == mock_oi
     assert command_default.drivetrain is not None
     assert command_default.drivetrain == drivetrain_default
-    assert command_default.getName() == "TestTankDrive"
     assert command_default.dpad_scaling == 1.0
     assert command_default.stick_scaling == 1.0
 

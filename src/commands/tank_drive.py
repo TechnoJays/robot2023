@@ -1,3 +1,6 @@
+# Copyright (c) Southfield High School Team 94
+# Open Source Software; you can modify and / or share it under the terms of
+# the MIT license file in the root directory of this project
 from commands2 import Command
 from commands2 import Subsystem
 

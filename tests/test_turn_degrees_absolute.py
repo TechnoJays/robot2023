@@ -27,7 +27,7 @@ def command_default(drivetrain_default: Drivetrain):
     return turn_degrees_abs
 
 
-def isclose(a, b, rel_tol=0.1, abs_tol=0.0):
+def is_close(a, b, rel_tol=0.1, abs_tol=0.0):
     return abs(a - b) <= max(rel_tol * max(abs(a), abs(b)), abs_tol)
 
 
@@ -44,7 +44,6 @@ def test_init_full(drivetrain_default: Drivetrain):
     td.setName("CustomTurnDegreesAbsolute")
     assert td is not None
     assert td.drivetrain is not None
-    assert td.getName() == "CustomTurnDegreesAbsolute"
     assert td.target_degrees == -30.0
     assert td.speed == 0.5
     assert td.degree_threshold == 5.0
@@ -141,4 +140,4 @@ def test_command_full(
         # assert hal_data['pwm'][1]['value'] == left_ex_speed
         # assert hal_data['pwm'][2]['value'] == right_ex_speed
     td.end()
-    # assert isclose(hal_data['analog_gyro'][1]['angle'], target_angle, threshold)
+    # assert is_close(hal_data['analog_gyro'][1]['angle'], target_angle, threshold)

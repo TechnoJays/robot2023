@@ -1,4 +1,7 @@
-import configparser
+# Copyright (c) Southfield High School Team 94
+# Open Source Software; you can modify and / or share it under the terms of
+# the MIT license file in the root directory of this project
+from configparser import ConfigParser
 from typing import Optional
 
 from commands2 import SubsystemBase
@@ -31,7 +34,7 @@ class Drivetrain(SubsystemBase):
 
     def __init__(
             self,
-            config: configparser.ConfigParser,
+            config: ConfigParser,
     ):
         self._config = config
         self._init_components()
@@ -52,39 +55,19 @@ class Drivetrain(SubsystemBase):
             Drivetrain.GENERAL_SECTION, Drivetrain.DPAD_SCALING_KEY
         )
 
-        self._left_motor = PWMVictorSPX(
-            self._config.getint(
-                Drivetrain.LEFT_MOTOR_SECTION, Drivetrain.CHANNEL_KEY
-            )
-        )
-        self._left_motor.setInverted(
-            self._config.getboolean(
-                Drivetrain.LEFT_MOTOR_SECTION, Drivetrain.INVERTED_KEY
-            )
-        )
-        if not self._config.getboolean(
-                Drivetrain.LEFT_MOTOR_SECTION, Drivetrain.ENABLED_KEY
-        ):
-            self._left_motor.disable()
-
-        self._right_motor = PWMVictorSPX(
-            self._config.getint(
-                Drivetrain.RIGHT_MOTOR_SECTION, Drivetrain.CHANNEL_KEY
-            )
-        )
-        self._right_motor.setInverted(
-            self._config.getboolean(
-                Drivetrain.RIGHT_MOTOR_SECTION, Drivetrain.INVERTED_KEY
-            )
-        )
-        if not self._config.getboolean(
-                Drivetrain.RIGHT_MOTOR_SECTION, Drivetrain.ENABLED_KEY
-        ):
-            self._right_motor.disable()
+        self._left_motor = self._init_motor(Drivetrain.RIGHT_MOTOR_SECTION)
+        self._right_motor = self._init_motor(Drivetrain.LEFT_MOTOR_SECTION)
 
         if self._left_motor and self._right_motor:
             self._robot_drive = DifferentialDrive(self._left_motor, self._right_motor)
             self._robot_drive.setSafetyEnabled(False)
+
+    def _init_motor(self, config_section: str) -> PWMVictorSPX:
+        motor = PWMVictorSPX(self._config.getint(config_section, Drivetrain.CHANNEL_KEY))
+        motor.setInverted(self._config.getboolean(config_section, Drivetrain.INVERTED_KEY))
+        if not self._config.getboolean(config_section, Drivetrain.ENABLED_KEY):
+            motor.disable()
+        return motor
 
     def reset_gyro_angle(self) -> float:
         if self._gyro:

@@ -1,3 +1,6 @@
+# Copyright (c) Southfield High School Team 94
+# Open Source Software; you can modify and / or share it under the terms of
+# the MIT license file in the root directory of this project
 from commands2 import Command
 from commands2 import Subsystem
 
@@ -27,7 +30,7 @@ class TurnTime(Command):
 
     def execute(self):
         """Called repeatedly when this Command is scheduled to run"""
-        self._robot.drivetrain.arcade_drive(0.0, self._speed, False)
+        self._drivetrain.arcade_drive(0.0, self._speed, False)
         return Command.execute(self)
 
     def isFinished(self):
@@ -39,7 +42,7 @@ class TurnTime(Command):
     def end(self, **kwargs):
         """Called once after isFinished returns true"""
         self._stopwatch.stop()
-        self._robot.drivetrain.arcade_drive(0.0, 0.0)
+        self._drivetrain.arcade_drive(0.0, 0.0)
 
     def interrupted(self):
         """Called when another command which requires one or more of the same subsystems is scheduled to run"""

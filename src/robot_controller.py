@@ -10,6 +10,7 @@ from commands2 import SubsystemBase, CommandBase, TimedCommandRobot
 from oi import OI
 from subsystems.arm import Arm
 from subsystems.drivetrain import Drivetrain
+from subsystems.grabber import Grabber
 
 
 class RobotController:
@@ -23,16 +24,10 @@ class RobotController:
     JOYSTICK_CONFIG_PATH = "/home/lvuser/py/configs/joysticks.ini"
     AUTONOMOUS_CONFIG_PATH = "/home/lvuser/py/configs/autonomous.ini"
 
-    _autonomous_command: CommandBase = None
-
-    _subsystems_config: ConfigParser = None
-    _joystick_config: ConfigParser = None
-    _autonomous_config: ConfigParser = None
-
     def __init__(self, robot: TimedCommandRobot) -> None:
-        self._robot = robot
+        self._robot: TimedCommandRobot = robot
         self._init_config()
-        self._init_subsystems()
+        self._subsystems = self._init_subsystems()
 
     def _init_config(self) -> None:
         """
@@ -62,6 +57,9 @@ class RobotController:
         self._arm = Arm(self._subsystems_config)
         subsystems.append(self._arm)
 
+        self._grabber = Grabber(self._subsystems_config)
+        subsystems.append(self._grabber)
+
         wpilib.CameraServer.launch()
 
         return subsystems
@@ -71,25 +69,48 @@ class RobotController:
         A method to connect subsystems, the operator interface, and autonomous once
         all the subsystems have been initialized
         """
-        self.oi().map_commands(self.drivetrain(), self.arm())
+        self._oi.map_commands(self._drivetrain, self._arm)
 
     def get_auto_choice(self) -> CommandBase:
-        return self.oi().get_auto_choice()
+        return self._oi.get_auto_choice()
 
+    @property
     def drivetrain(self) -> Drivetrain:
         """
         Retrieve the drivetrain managed by the robot controller
         """
         return self._drivetrain
 
+    @property
     def arm(self) -> Arm:
         """
         Retrieve the "Arm" managed by the robot controller
         """
         return self._arm
 
+    @property
     def oi(self) -> OI:
         """
         Retrieve the operator interface managed by the robot controller
         """
         return self._oi
+
+    @property
+    def grabber(self) -> Grabber:
+        return self._grabber
+
+    @property
+    def subsystems_config(self) -> ConfigParser:
+        return self._subsystems_config
+
+    @property
+    def joystick_config(self) -> ConfigParser:
+        return self._joystick_config
+
+    @property
+    def autonomous_config(self) -> ConfigParser:
+        return self._autonomous_config
+
+    @property
+    def subsystems(self):
+        return self._subsystems

@@ -1,0 +1,55 @@
+# Copyright (c) Southfield High School Team 94
+# Open Source Software; you can modify and / or share it under the terms of
+# the MIT license file in the root directory of this project
+from commands2 import CommandBase
+
+from subsystems.grabber import Grabber
+
+
+class Grab(CommandBase):
+    """
+    Command to trigger the Grabber subsystem to pinch closed
+    """
+
+    def __init__(self, grabber: Grabber) -> None:
+        """
+        Constructor to connect to the Grabber subsystem and acknowledge the Grabber as a subsystem requirement
+        """
+        super().__init__()
+        self._grabber = grabber
+        self.addRequirements(grabber)
+
+    def initialize(self) -> None:
+        """
+        Trigger the Grabber to close
+        """
+        self._grabber.grab()
+
+    def isFinished(self) -> bool:
+        """
+        The command should immediately stop executing once the signal to close has been sent
+        """
+        return True
+
+
+class Release(CommandBase):
+
+    def __init__(self, grabber: Grabber) -> None:
+        """
+        Constructor to connect to the Grabber subsystem and acknowledge the Grabber as a subsystem requirement
+        """
+        super().__init__()
+        self._grabber = grabber
+        self.addRequirements(grabber)
+
+    def initialize(self) -> None:
+        """
+        Trigger the Grabber to open
+        """
+        self._grabber.release()
+
+    def isFinished(self) -> bool:
+        """
+        The command should immediately stop executing once the signal to close has been sent
+        """
+        return True

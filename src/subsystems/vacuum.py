@@ -1,10 +1,8 @@
-import configparser
+from configparser import ConfigParser
 
 from commands2 import SubsystemBase
-from wpilib import IterativeRobotBase, PWMMotorController, PWMVictorSPX
+from wpilib import PWMVictorSPX
 from wpilib import SmartDashboard
-
-from commands.vacuum_drive import VacuumDrive
 
 
 class Vacuum(SubsystemBase):
@@ -17,24 +15,12 @@ class Vacuum(SubsystemBase):
     INVERTED_KEY = "INVERTED"
     MAX_SPEED_KEY = "MAX_SPEED"
 
-    _robot: IterativeRobotBase = None
-
-    _config = None
-    _motor: PWMMotorController = None
-    _max_speed: float = 0.0
-
     def __init__(
-        self,
-        robot: IterativeRobotBase,
-        name: str = "Vacuum",
-        configfile: str = "/home/lvuser/py/configs/subsystems.ini",
+            self,
+            config: ConfigParser,
     ):
-        self._robot = robot
-        self._config = configparser.ConfigParser()
-        self._config.read(configfile)
+        self._config = config
         self._init_components()
-        Vacuum._update_smartdashboard(0.0)
-        self.setName(name)
         super().__init__()
 
     def _init_components(self):
@@ -48,10 +34,7 @@ class Vacuum(SubsystemBase):
             self._motor.setInverted(
                 self._config.getboolean(Vacuum.GENERAL_SECTION, Vacuum.INVERTED_KEY)
             )
-
-    def initDefaultCommand(self):
-        # self.setDefaultCommand(DoNothingVacuum(self._robot)) #previous
-        self.setDefaultCommand(VacuumDrive(self._robot))
+        Vacuum._update_smartdashboard(0.0)
 
     def move(self, speed: float):
         adjusted_speed = 0.0

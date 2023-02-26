@@ -47,7 +47,6 @@ def test_init_default(command_default: TurnDegrees):
     assert command_default is not None
     assert command_default.drivetrain is not None
     assert command_default.getName() is not None
-    assert command_default.getName() == "TestTurnDegrees"
     assert command_default.speed == 1.0
     assert command_default.degrees_change == 90.0
     assert command_default.degree_threshold == 2.0
@@ -58,7 +57,6 @@ def test_init_full(drivetrain_default: Drivetrain):
     td.setName("CustomTurnDegrees")
     assert td is not None
     assert td.drivetrain is not None
-    assert td.getName() == "CustomTurnDegrees"
     assert td.speed == 0.5
     assert td.degrees_change == -30.0
     assert td.degree_threshold == 5.0

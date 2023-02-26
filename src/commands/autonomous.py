@@ -9,10 +9,6 @@ from commands.raise_shooter import RaiseShooter
 from subsystems.drivetrain import Drivetrain
 
 
-def use_drive_gyro(robot) -> bool:
-    return robot.drivetrain.is_gyro_enabled()
-
-
 class MoveFromLine(CommandGroupBase):
     _SECTION = "MoveFromLine"
     _DRIVE_SPEED = "DRIVE_SPEED"
