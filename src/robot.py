@@ -6,10 +6,7 @@ from robot_controller import RobotController
 
 
 class RetrojaysRobot(TimedCommandRobot):
-
-    def __init__(self, period: 0.02):
-        super().__init__(period)
-        self._robot_controller = None
+    _robot_controller: RobotController = None
 
     def autonomousInit(self):
         # Schedule the autonomous command
