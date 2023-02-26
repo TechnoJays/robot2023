@@ -8,7 +8,7 @@ from wpilib import Joystick
 from wpilib import SendableChooser
 from wpilib import SmartDashboard
 
-from commands.autonomous import MoveFromLine
+from commands.autonomous_commands import MoveFromLine
 from subsystems.arm import Arm
 from subsystems.drivetrain import Drivetrain
 

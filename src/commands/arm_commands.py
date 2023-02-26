@@ -109,3 +109,44 @@ class Lower(CommandBase):
         The steps to execute everytime this command is called
         """
         self._arm.move(-1.0)
+
+
+class DoNothingArm(CommandBase):
+    """
+    The suggested default command for the Arm
+
+    Sets the speed of the arm to zero, which should immediately stop its movement, regardless of previous
+    commands running for the arm
+    """
+
+    def __init__(
+            self,
+            arm: Arm
+    ):
+        super().__init__()
+        self._arm = arm
+        self.addRequirements(arm)
+
+    def initialize(self) -> None:
+        """Called before the Command is run for the first time."""
+        pass
+
+    def execute(self) -> None:
+        """Called repeatedly when this Command is scheduled to run"""
+        self._arm.move(0.0)
+
+    def isFinished(self) -> bool:
+        """Returns true when the Command no longer needs to be run"""
+        return False
+
+    def end(self, **kwargs):
+        """Called once after isFinished returns true"""
+        pass
+
+    def interrupted(self):
+        """Called when another command which requires one or more of the same subsystems is scheduled to run"""
+        self.end()
+
+    @property
+    def arm(self) -> Arm:
+        return self._arm

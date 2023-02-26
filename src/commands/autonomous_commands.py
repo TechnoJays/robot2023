@@ -4,8 +4,8 @@ from commands2 import CommandGroupBase
 from commands2 import WaitCommand
 from wpilib import IterativeRobotBase
 
-from commands.drive_time import DriveTime
-from commands.raise_shooter import RaiseShooter
+from commands.arcade_drive_commands import DriveTime
+from commands.shooter_commands import RaiseShooter
 from subsystems.drivetrain import Drivetrain
 
 

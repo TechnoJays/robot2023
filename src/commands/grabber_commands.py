@@ -53,3 +53,33 @@ class Release(CommandBase):
         The command should immediately stop executing once the signal to close has been sent
         """
         return True
+
+
+class DoNothingGrabber(CommandBase):
+
+    def __init__(self, grabber: Grabber) -> None:
+        """
+        Constructor to connect to the Grabber subsystem and acknowledge the Grabber as a subsystem requirement
+
+        Suggested default command for the grabber
+        """
+        super().__init__()
+        self._grabber = grabber
+        self.addRequirements(grabber)
+
+    def initialize(self) -> None:
+        """
+        Do nothing to change the state of the grabber
+
+        Whatever the last command setting the pneumatic solenoid received, it will continue to do
+        """
+        pass
+
+    def isFinished(self) -> bool:
+        """
+        As the suggested default command for the grabber, this command is never finished until another command
+        is triggered to replace it
+
+        return False
+        """
+        return False

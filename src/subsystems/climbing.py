@@ -5,7 +5,7 @@ from wpilib import DigitalInput, IterativeRobotBase
 from wpilib import PWMTalonSRX
 from wpilib import SmartDashboard
 
-from commands.move_winch import MoveWinch
+from commands.winch_commands import MoveWinch
 
 
 class Climbing(SubsystemBase):

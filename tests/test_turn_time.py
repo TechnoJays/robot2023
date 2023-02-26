@@ -4,7 +4,7 @@ import pytest
 from wpilib import IterativeRobotBase
 from wpilib.simulation import PWMSim
 
-from commands.turn_time import TurnTime
+from commands.arcade_drive_commands import TurnTime
 from subsystems.drivetrain import Drivetrain
 from util.stopwatch import Stopwatch
 

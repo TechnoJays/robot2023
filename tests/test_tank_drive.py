@@ -9,7 +9,7 @@ from wpilib import IterativeRobotBase
 from wpilib.simulation import PWMSim
 
 import oi
-from commands.tank_drive import TankDrive
+from commands.tank_drive_commands import TankDrive
 from subsystems.drivetrain import Drivetrain
 
 

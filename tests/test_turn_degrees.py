@@ -4,7 +4,7 @@ import pytest
 from wpilib.simulation import AnalogGyroSim
 from wpilib.simulation import PWMSim
 
-from commands.turn_degrees import TurnDegrees
+from commands.arcade_drive_commands import TurnDegrees
 from subsystems.drivetrain import Drivetrain
 
 

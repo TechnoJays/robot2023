@@ -5,7 +5,7 @@ from wpilib import PneumaticsModuleType
 from wpilib import SmartDashboard
 from wpilib import Solenoid
 
-from commands.lower_shooter import LowerShooter
+from commands.shooter_commands import LowerShooter
 
 
 class Flipper(SubsystemBase):

@@ -2,7 +2,7 @@ from configparser import ConfigParser
 
 import pytest
 
-from commands.turn_degrees_absolute import TurnDegreesAbsolute
+from commands.arcade_drive_commands import TurnDegreesAbsolute
 from subsystems.drivetrain import Drivetrain
 
 
