@@ -39,13 +39,13 @@ class ShooterDrive(CommandBase):
     def __init__(
             self,
             shooter: Shooter,
-            oi: OI,
+            # oi: OI,
             modifier_scaling: float = 1.0,
             dpad_scaling: float = 0.4
     ):
         super().__init__()
         self._shooter = shooter
-        self._oi = oi
+        # self._oi = oi
         self._dpad_scaling = dpad_scaling
         self._stick_scaling = modifier_scaling
         self.addRequirements(shooter)
