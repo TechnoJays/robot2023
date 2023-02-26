@@ -189,7 +189,7 @@ class OI:
                 value = 0.0
         return value
 
-    def get_button_state(self, user: UserController, button: JoystickButtons) -> bool:
+    def get_button_state(self, user: UserController, button: int) -> bool:
         return self._controllers[user.value].getRawButton(button)
 
     def config(self) -> configparser.ConfigParser:
