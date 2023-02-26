@@ -6,7 +6,9 @@ from configparser import ConfigParser
 
 import wpilib
 from commands2 import SubsystemBase, CommandBase, TimedCommandRobot
+from wpilib import SmartDashboard, SendableChooser
 
+from commands.autonomous_commands import MoveFromLine
 from oi import OI
 from subsystems.arm import Arm
 from subsystems.drivetrain import Drivetrain
@@ -73,6 +75,16 @@ class RobotController:
 
     def get_auto_choice(self) -> CommandBase:
         return self._oi.get_auto_choice()
+
+    def _setup_autonomous_smartdashboard(self,
+                                         drivetrain: Drivetrain,
+                                         autonomous_config: configparser.ConfigParser) -> SendableChooser:
+        self._auto_program_chooser = SendableChooser()
+        self._auto_program_chooser.setDefaultOption(
+            "Move From Line", MoveFromLine(drivetrain, autonomous_config)
+        )
+        SmartDashboard.putData("Autonomous", self._auto_program_chooser)
+        return self._auto_program_chooser
 
     @property
     def drivetrain(self) -> Drivetrain:
