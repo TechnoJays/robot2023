@@ -5,6 +5,7 @@ from commands2._impl.button import JoystickButton
 
 from commands.autonomous_commands import MoveFromLine
 from oi import JoystickAxis, JoystickButtons, OI
+from subsystems.drivetrain import Drivetrain
 
 
 @pytest.fixture(scope="function")
@@ -36,6 +37,18 @@ def oi_default(config_default: ConfigParser) -> OI:
 @pytest.fixture(scope="function")
 def oi_joy_ports(config_joy_ports_01: ConfigParser) -> OI:
     return OI(config_joy_ports_01)
+
+
+@pytest.fixture(scope="function")
+def drivetrain_config() -> ConfigParser:
+    config = ConfigParser()
+    config.read("./test_configs/drivetrain_default.ini")
+    return config
+
+
+@pytest.fixture(scope="function")
+def drivetrain_default(drivetrain_config: ConfigParser) -> Drivetrain:
+    return Drivetrain(drivetrain_config)
 
 
 def test__init_joystick(oi_joy_ports: OI, config_joy_ports_01: ConfigParser):
@@ -81,9 +94,10 @@ def test__init_joystick_binding(oi_default: OI, config_default: ConfigParser):
 
 
 @pytest.mark.skip(reason="don't know why robot is None for this test")
-def test__setup_autonomous_smartdashboard(oi_default: OI, config_auto: ConfigParser):
+def test__setup_autonomous_smartdashboard(drivetrain_default: Drivetrain,
+                                          oi_default: OI, config_auto: ConfigParser):
     assert oi_default is not None
-    auto_chooser = oi_default._setup_autonomous_smartdashboard(config_auto)
+    auto_chooser = oi_default._setup_autonomous_smartdashboard(drivetrain_default, config_auto)
     assert auto_chooser is not None
     assert type(auto_chooser.getSelected()) is MoveFromLine
 

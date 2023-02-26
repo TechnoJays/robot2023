@@ -122,12 +122,15 @@ class OI:
         JoystickButtons.BACK = self._config.getint(OI.BUTTON_BINDING_SECTION, OI.BACK_KEY)
         JoystickButtons.START = self._config.getint(OI.BUTTON_BINDING_SECTION, OI.START_KEY)
 
-    def _setup_autonomous_smartdashboard(self, autonomous_config: configparser.ConfigParser):
+    def _setup_autonomous_smartdashboard(self,
+                                         drivetrain: Drivetrain,
+                                         autonomous_config: configparser.ConfigParser) -> SendableChooser:
         self._auto_program_chooser = SendableChooser()
         self._auto_program_chooser.setDefaultOption(
-            "Move From Line", MoveFromLine(autonomous_config)
+            "Move From Line", MoveFromLine(drivetrain, autonomous_config)
         )
         SmartDashboard.putData("Autonomous", self._auto_program_chooser)
+        return self._auto_program_chooser
 
     def _init_button_binding(self) -> None:
         self._grab_button = JoystickButton(
@@ -164,7 +167,7 @@ class OI:
     def get_game_message() -> str:
         return DriverStation.getGameSpecificMessage()
 
-    def get_axis(self, user: UserController, axis: JoystickAxis) -> float:
+    def get_axis(self, user: UserController, axis: int) -> float:
         """Read axis value for specified controller/axis.
 
         Args:
