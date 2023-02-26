@@ -55,8 +55,8 @@ class Drivetrain(SubsystemBase):
             Drivetrain.GENERAL_SECTION, Drivetrain.DPAD_SCALING_KEY
         )
 
-        self._left_motor = self._init_motor(Drivetrain.RIGHT_MOTOR_SECTION)
-        self._right_motor = self._init_motor(Drivetrain.LEFT_MOTOR_SECTION)
+        self._left_motor = self._init_motor(Drivetrain.LEFT_MOTOR_SECTION)
+        self._right_motor = self._init_motor(Drivetrain.RIGHT_MOTOR_SECTION)
 
         if self._left_motor and self._right_motor:
             self._robot_drive = DifferentialDrive(self._left_motor, self._right_motor)
