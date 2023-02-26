@@ -1,7 +1,7 @@
 import configparser
 from enum import Enum
 
-from commands2 import CommandGroupBase, TimedCommandRobot
+from commands2 import CommandGroupBase
 from commands2.button import JoystickButton
 from wpilib import DriverStation
 from wpilib import Joystick
@@ -11,6 +11,7 @@ from wpilib import SmartDashboard
 from commands.autonomous_commands import MoveFromLine
 from subsystems.arm import Arm
 from subsystems.drivetrain import Drivetrain
+from subsystems.grabber import Grabber
 
 
 class JoystickAxis:
@@ -102,36 +103,24 @@ class OI:
     def _init_joystick_binding(self):
         JoystickAxis.LEFTX = self._config.getint(OI.AXIS_BINDING_SECTION, OI.LEFT_X_KEY)
         JoystickAxis.LEFTY = self._config.getint(OI.AXIS_BINDING_SECTION, OI.LEFT_Y_KEY)
-        JoystickAxis.RIGHTX = self._config.getint(
-            OI.AXIS_BINDING_SECTION, OI.RIGHT_X_KEY
-        )
-        JoystickAxis.RIGHTY = self._config.getint(
-            OI.AXIS_BINDING_SECTION, OI.RIGHT_Y_KEY
-        )
+        JoystickAxis.RIGHTX = self._config.getint(OI.AXIS_BINDING_SECTION, OI.RIGHT_X_KEY)
+        JoystickAxis.RIGHTY = self._config.getint(OI.AXIS_BINDING_SECTION, OI.RIGHT_Y_KEY)
+
         JoystickAxis.DPADX = self._config.getint(OI.AXIS_BINDING_SECTION, OI.DPAD_X_KEY)
         JoystickAxis.DPADY = self._config.getint(OI.AXIS_BINDING_SECTION, OI.DPAD_Y_KEY)
+
         JoystickButtons.X = self._config.getint(OI.BUTTON_BINDING_SECTION, OI.X_KEY)
         JoystickButtons.A = self._config.getint(OI.BUTTON_BINDING_SECTION, OI.A_KEY)
         JoystickButtons.B = self._config.getint(OI.BUTTON_BINDING_SECTION, OI.B_KEY)
         JoystickButtons.Y = self._config.getint(OI.BUTTON_BINDING_SECTION, OI.Y_KEY)
-        JoystickButtons.LEFTBUMPER = self._config.getint(
-            OI.BUTTON_BINDING_SECTION, OI.LEFT_BUMPER_KEY
-        )
-        JoystickButtons.RIGHTBUMPER = self._config.getint(
-            OI.BUTTON_BINDING_SECTION, OI.RIGHT_BUMPER_KEY
-        )
-        JoystickButtons.LEFTTRIGGER = self._config.getint(
-            OI.BUTTON_BINDING_SECTION, OI.LEFT_TRIGGER_KEY
-        )
-        JoystickButtons.RIGHTTRIGGER = self._config.getint(
-            OI.BUTTON_BINDING_SECTION, OI.RIGHT_TRIGGER_KEY
-        )
-        JoystickButtons.BACK = self._config.getint(
-            OI.BUTTON_BINDING_SECTION, OI.BACK_KEY
-        )
-        JoystickButtons.START = self._config.getint(
-            OI.BUTTON_BINDING_SECTION, OI.START_KEY
-        )
+
+        JoystickButtons.LEFTBUMPER = self._config.getint(OI.BUTTON_BINDING_SECTION, OI.LEFT_BUMPER_KEY)
+        JoystickButtons.RIGHTBUMPER = self._config.getint(OI.BUTTON_BINDING_SECTION, OI.RIGHT_BUMPER_KEY)
+        JoystickButtons.LEFTTRIGGER = self._config.getint(OI.BUTTON_BINDING_SECTION, OI.LEFT_TRIGGER_KEY)
+        JoystickButtons.RIGHTTRIGGER = self._config.getint(OI.BUTTON_BINDING_SECTION, OI.RIGHT_TRIGGER_KEY)
+
+        JoystickButtons.BACK = self._config.getint(OI.BUTTON_BINDING_SECTION, OI.BACK_KEY)
+        JoystickButtons.START = self._config.getint(OI.BUTTON_BINDING_SECTION, OI.START_KEY)
 
     def _setup_autonomous_smartdashboard(self, autonomous_config: configparser.ConfigParser):
         self._auto_program_chooser = SendableChooser()
@@ -148,7 +137,7 @@ class OI:
             self._controllers[UserController.SCORING.value], JoystickButtons.LEFTBUMPER
         )
 
-    def map_commands(self, drivetrain: Drivetrain, arm: Arm) -> None:
+    def map_commands(self, drivetrain: Drivetrain, arm: Arm, grabber: Grabber) -> None:
         # TODO: refactor to commands2 framework
         # suck_button.whileHeld(Vacuum(self._robot_controller, 1.0))
         # blow_button.whileHeld(Vacuum(self._robot_controller, -1.0))
