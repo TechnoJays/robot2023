@@ -4,12 +4,16 @@
 import configparser
 from configparser import ConfigParser
 
+from commands2.button import JoystickButton
 import wpilib
 from commands2 import SubsystemBase, CommandBase, TimedCommandRobot
 from wpilib import SmartDashboard, SendableChooser
 
+from commands.arm_commands import ArmMove
 from commands.autonomous_drive_commands import MoveFromLine
-from oi import OI
+from commands.grabber_commands import Grab, Release
+from commands.tank_drive_commands import TankDrive
+from oi import OI, JoystickAxis, UserController, JoystickButtons
 from subsystems.arm import Arm
 from subsystems.drivetrain import Drivetrain
 from subsystems.grabber import Grabber
@@ -70,8 +74,28 @@ class RobotController:
         """
         A method to connect subsystems, the operator interface, and autonomous once
         all the subsystems have been initialized
+
+        This method is called separately from the constructor to prevent circular dependencies
+        across Subsystem and Command constructor initialization
         """
-        self._oi.map_commands(self._drivetrain, self._arm)
+
+        # set up the default drive command to be tank drive
+        self.drivetrain.setDefaultCommand(TankDrive(self.oi, self.drivetrain, ))
+
+        # set up the default arm command
+        self.arm.setDefaultCommand(
+            ArmMove(
+                self.arm,
+                lambda: self.oi.get_axis(UserController.SCORING, JoystickAxis.LEFTY),
+            )
+        )
+
+        # set up the default grabber command to be "Grab"
+        self.grabber.setDefaultCommand(Grab(self.grabber))
+
+        # set up the right bumper of the scoring controller to trigger the grabber to release
+        scoring_controller = self.oi.controllers()[UserController.SCORING.value]
+        JoystickButton(scoring_controller, JoystickButtons.RIGHTBUMPER).whileHeld(Release(self.grabber))
 
     def get_auto_choice(self) -> CommandBase:
         return self._oi.get_auto_choice()
