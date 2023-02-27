@@ -17,6 +17,11 @@ def test__init(robot: TimedCommandRobot):
 
     # and all subsystems should be initialized
     assert controller.drivetrain is not None
+    assert controller.drivetrain.left_motor is not None
+    assert controller.drivetrain.right_motor is not None
     assert controller.oi is not None
+
     assert controller.arm is not None
+    assert controller.arm._motor is not None
+
     assert controller.grabber is not None
