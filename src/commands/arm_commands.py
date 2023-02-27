@@ -42,7 +42,7 @@ class Raise(CommandBase):
         self._arm.move(1.0)
 
 
-class Move(CommandBase):
+class ArmMove(CommandBase):
     """
     Command to trigger the Arm subsystem to raise
 
