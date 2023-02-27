@@ -184,7 +184,7 @@ class OI:
     def config(self) -> configparser.ConfigParser:
         return self._config
 
-    def controllers(self) -> list[UserController]:
+    def controllers(self) -> list[Joystick]:
         return self._controllers
 
     def auto_chooser(self) -> SendableChooser:
