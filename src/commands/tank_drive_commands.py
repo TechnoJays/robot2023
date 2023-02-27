@@ -2,7 +2,6 @@
 # Open Source Software; you can modify and / or share it under the terms of
 # the MIT license file in the root directory of this project
 from commands2 import Command
-from commands2 import Subsystem
 
 from oi import JoystickAxis, UserController, JoystickButtons, OI
 from subsystems.drivetrain import Drivetrain
@@ -14,8 +13,6 @@ class TankDrive(Command):
             self,
             oi: OI,
             drivetrain: Drivetrain,
-            modifier_scaling: float = 0.5,
-            dpad_scaling: float = 0.4,
     ):
         """
         Constructor
@@ -35,8 +32,8 @@ class TankDrive(Command):
         super().__init__()
         self._oi = oi
         self._drivetrain = drivetrain
-        self._dpad_scaling = dpad_scaling
-        self._stick_scaling = modifier_scaling
+        self._dpad_scaling = drivetrain.dpad_scaling
+        self._stick_scaling = drivetrain.modifier_scaling
 
     def initialize(self):
         """Called before the Command is run for the first time."""
@@ -78,9 +75,6 @@ class TankDrive(Command):
     def interrupted(self):
         """Called when another command which requires one or more of the same subsystems is scheduled to run"""
         pass
-
-    def getRequirements(self) -> set[Subsystem]:
-        return {self.drivetrain}
 
     @property
     def drivetrain(self) -> Drivetrain:
