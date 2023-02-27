@@ -7,10 +7,6 @@ from wpilib import DriverStation
 from wpilib import Joystick
 from wpilib import SendableChooser
 
-from subsystems.arm import Arm
-from subsystems.drivetrain import Drivetrain
-from subsystems.grabber import Grabber
-
 
 class JoystickAxis:
     """Enumerates joystick axis."""
@@ -127,13 +123,6 @@ class OI:
         self._release_button = JoystickButton(
             self._controllers[UserController.SCORING.value], JoystickButtons.LEFTBUMPER
         )
-
-    def map_commands(self, drivetrain: Drivetrain, arm: Arm, grabber: Grabber) -> None:
-        # TODO: refactor to commands2 framework
-        # suck_button.whileHeld(Vacuum(self._robot_controller, 1.0))
-        # blow_button.whileHeld(Vacuum(self._robot_controller, -1.0))
-        # shoot_button.whileHeld(Shoot(self._robot, 1.0))
-        pass
 
     def get_auto_choice(self) -> CommandGroupBase:
         """
