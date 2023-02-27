@@ -14,10 +14,12 @@ class RetrojaysRobot(TimedCommandRobot):
         autonomous_command = self._robot_controller.get_auto_choice()
         autonomous_command.start()
 
-    def testInit(self):
-        pass
-
-    def teleopInit(self):
+    def autonomousPeriodic(self):
+        """
+        This function is called periodically during autonomous.
+        The scheduler is what runs the periodioc processes for managing
+        commands during autonomous
+        """
         pass
 
     def disabledInit(self):
@@ -31,12 +33,7 @@ class RetrojaysRobot(TimedCommandRobot):
         self._robot_controller = RobotController(self)
         self._robot_controller.mappings()
 
-    def autonomousPeriodic(self):
-        """
-        This function is called periodically during autonomous.
-        The scheduler is what runs the periodioc processes for managing
-        commands during autonomous
-        """
+    def teleopInit(self):
         pass
 
     def teleopPeriodic(self):
@@ -47,12 +44,16 @@ class RetrojaysRobot(TimedCommandRobot):
         """
         CommandScheduler.getInstance().run()
 
+    def testInit(self):
+        pass
+
     def testPeriodic(self):
         """
         This function is called periodically during test mode.
         """
         pass
 
+    @property
     def controller(self) -> RobotController:
         """ Returns the robot controller managing all robot subsystems and operator interface"""
         return self._robot_controller
