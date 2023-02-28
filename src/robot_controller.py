@@ -80,7 +80,7 @@ class RobotController:
         """
 
         # set up the default drive command to be tank drive
-        self.drivetrain.setDefaultCommand(TankDrive(self.oi, self.drivetrain, ))
+        self.drivetrain.setDefaultCommand(TankDrive(self.oi, self.drivetrain))
 
         # set up the default arm command
         self.arm.setDefaultCommand(
@@ -94,8 +94,7 @@ class RobotController:
         self.grabber.setDefaultCommand(Grab(self.grabber))
 
         # set up the right bumper of the scoring controller to trigger the grabber to release
-        scoring_controller = self.oi.controllers()[UserController.SCORING.value]
-        JoystickButton(scoring_controller, JoystickButtons.RIGHTBUMPER).whileHeld(Release(self.grabber))
+        self.oi.release_button().whileHeld(Release(self.grabber))
 
     def get_auto_choice(self) -> CommandBase:
         return self._oi.get_auto_choice()

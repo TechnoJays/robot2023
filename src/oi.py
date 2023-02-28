@@ -81,6 +81,7 @@ class OI:
             self._controllers.append(self._init_joystick(i))
             self._dead_zones.append(self._init_dead_zone(i))
 
+        print(self._controllers)
         self._init_joystick_binding()
         self._init_button_binding()
         self._auto_program_chooser: SendableChooser = SendableChooser()
@@ -117,10 +118,10 @@ class OI:
         JoystickButtons.START = self._config.getint(OI.BUTTON_BINDING_SECTION, OI.START_KEY)
 
     def _init_button_binding(self) -> None:
-        self._grab_button = JoystickButton(
-            self._controllers[UserController.SCORING.value], JoystickButtons.RIGHTBUMPER
-        )
         self._release_button = JoystickButton(
+            self._controllers[UserController.SCORING.value], JoystickButtons.A
+        )
+        self._grab_button = JoystickButton(
             self._controllers[UserController.SCORING.value], JoystickButtons.LEFTBUMPER
         )
 

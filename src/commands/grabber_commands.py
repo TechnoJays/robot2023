@@ -1,7 +1,8 @@
 # Copyright (c) Southfield High School Team 94
 # Open Source Software; you can modify and / or share it under the terms of
 # the MIT license file in the root directory of this project
-from commands2 import CommandBase
+import typing
+from commands2 import CommandBase, Subsystem
 
 from subsystems.grabber import Grabber
 
@@ -30,6 +31,9 @@ class Grab(CommandBase):
         The command should immediately stop executing once the signal to close has been sent
         """
         return True
+    
+    def getRequirements(self) -> typing.Set[Subsystem]:
+        return {self._grabber}
 
 
 class Release(CommandBase):
@@ -53,6 +57,9 @@ class Release(CommandBase):
         The command should immediately stop executing once the signal to close has been sent
         """
         return True
+    
+    def getRequirements(self) -> typing.Set[Subsystem]:
+        return {self._grabber}
 
 
 class DoNothingGrabber(CommandBase):
@@ -83,3 +90,6 @@ class DoNothingGrabber(CommandBase):
         return False
         """
         return False
+    
+    def getRequirements(self) -> typing.Set[Subsystem]:
+        return {self._grabber}

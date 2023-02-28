@@ -1,7 +1,8 @@
 # Copyright (c) Southfield High School Team 94
 # Open Source Software; you can modify and / or share it under the terms of
 # the MIT license file in the root directory of this project
-from commands2 import Command
+import typing
+from commands2 import Command, Subsystem
 
 from oi import JoystickAxis, UserController, JoystickButtons, OI
 from subsystems.drivetrain import Drivetrain
@@ -74,7 +75,9 @@ class TankDrive(Command):
 
     def interrupted(self):
         """Called when another command which requires one or more of the same subsystems is scheduled to run"""
-        pass
+        
+    def getRequirements(self) -> typing.Set[Subsystem]:
+        return {self._drivetrain}
 
     @property
     def drivetrain(self) -> Drivetrain:

@@ -3,7 +3,7 @@
 # the MIT license file in the root directory of this project
 import typing
 
-from commands2 import CommandBase
+from commands2 import CommandBase, Subsystem
 
 from subsystems.arm import Arm
 
@@ -41,6 +41,10 @@ class Raise(CommandBase):
         """
         self._arm.move(1.0)
 
+    def getRequirements(self) -> typing.Set[Subsystem]:
+        return {self._arm}
+
+
 
 class ArmMove(CommandBase):
     """
@@ -76,6 +80,9 @@ class ArmMove(CommandBase):
         """
         self._arm.move(self._joyInput())
 
+    def getRequirements(self) -> typing.Set[Subsystem]:
+        return {self._arm}
+
 
 class Lower(CommandBase):
     """
@@ -109,6 +116,9 @@ class Lower(CommandBase):
         The steps to execute everytime this command is called
         """
         self._arm.move(-1.0)
+
+    def getRequirements(self) -> typing.Set[Subsystem]:
+        return {self._arm}
 
 
 class DoNothingArm(CommandBase):
@@ -146,6 +156,9 @@ class DoNothingArm(CommandBase):
     def interrupted(self):
         """Called when another command which requires one or more of the same subsystems is scheduled to run"""
         self.end()
+
+    def getRequirements(self) -> typing.Set[Subsystem]:
+        return {self._arm}
 
     @property
     def arm(self) -> Arm:
