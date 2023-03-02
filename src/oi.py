@@ -22,9 +22,9 @@ class JoystickAxis:
 class JoystickButtons:
     """Enumerates joystick buttons."""
 
-    X = 1
-    A = 2
-    B = 3
+    A = 1
+    B = 2
+    X = 3
     Y = 4
     LEFTBUMPER = 5
     RIGHTBUMPER = 6
@@ -119,7 +119,8 @@ class OI:
 
     def _init_button_binding(self) -> None:
         self._release_button = JoystickButton(
-            self._controllers[UserController.SCORING.value], JoystickButtons.A
+            self._controllers[UserController.SCORING.value], JoystickButtons.RIGHTBUMPER
+            
         )
         self._grab_button = JoystickButton(
             self._controllers[UserController.SCORING.value], JoystickButtons.LEFTBUMPER
