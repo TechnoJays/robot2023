@@ -94,7 +94,8 @@ class RobotController:
         self.grabber.setDefaultCommand(Grab(self.grabber))
 
         # set up the right bumper of the scoring controller to trigger the grabber to release
-        self.oi.release_button().whileHeld(Release(self.grabber))
+        self.oi.scoring_controller.rightBumper().onTrue(Release(self.grabber)
+        # self.oi.release_button().whileHeld(Release(self.grabber))
 
     def get_auto_choice(self) -> CommandBase:
         return self._oi.get_auto_choice()

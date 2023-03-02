@@ -3,6 +3,8 @@ from enum import Enum
 
 from commands2 import CommandGroupBase
 from commands2.button import JoystickButton
+from commands2.button import CommandXboxController
+import commands2.cmd
 from wpilib import DriverStation
 from wpilib import Joystick
 from wpilib import SendableChooser
@@ -75,7 +77,7 @@ class OI:
     ):
         self._config = config
 
-        self._controllers: list[Joystick] = []
+        self._controllers: list[CommandXboxController] = []
         self._dead_zones: list[float] = []
         for i in range(2):
             self._controllers.append(self._init_joystick(i))
@@ -84,12 +86,14 @@ class OI:
         print(self._controllers)
         self._init_joystick_binding()
         self._init_button_binding()
+        self._driver_controller = self._controllers[0]
+        self._scoring_controller = self._controllers[1]
         self._auto_program_chooser: SendableChooser = SendableChooser()
         self._starting_chooser: SendableChooser = SendableChooser()
 
-    def _init_joystick(self, driver: int) -> Joystick:
+    def _init_joystick(self, driver: int) -> CommandXboxController:
         config_section = OI.JOY_CONFIG_SECTION + str(driver)
-        return Joystick(self._config.getint(config_section, OI.PORT_KEY))
+        return CommandXboxController(self._config.getint(config_section, OI.PORT_KEY))
 
     def _init_dead_zone(self, driver: int) -> float:
         config_section = OI.JOY_CONFIG_SECTION + str(driver)
@@ -197,3 +201,11 @@ class OI:
 
     def release_button(self) -> JoystickButton:
         return self._release_button
+    
+    @property
+    def scoring_controller(self) -> CommandXboxController:
+        return self._scoring_controller
+    
+    @property
+    def driver_controller(self) -> CommandXboxController:
+        return self._driver_controller
