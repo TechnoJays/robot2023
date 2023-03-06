@@ -133,7 +133,7 @@ class Arm(SubsystemBase):
         # TODO comment out once completed debugging
         if extended:
             print("[ARM]: --upper-- limit switch engaged")
-        return extended
+        return False
 
     def is_fully_retracted(self) -> bool:
         """
@@ -145,7 +145,7 @@ class Arm(SubsystemBase):
         # TODO comment out once completed debugging
         if retracted:
             print("[ARM]: --lower-- limit switch engaged")
-        return retracted
+        return False
 
     @staticmethod
     def _limit_value(switch: DigitalInput) -> bool:
@@ -162,5 +162,5 @@ class Arm(SubsystemBase):
 
     def _smartdashboard_display_components(self) -> None:
         SmartDashboard.putNumber(ARM_DASHBOARD_SLEW_RATE, self._slew_rate_of_change)
-        SmartDashboard.putBoolean(ARM_DASHBOARD_UPPER_LIMIT, self._limit_value(self._upper_limit_switch.get()))
-        SmartDashboard.putBoolean(ARM_DASHBOARD_LOWER_LIMIT, self._limit_value(self._lower_limit_switch.get()))
+        SmartDashboard.putBoolean(ARM_DASHBOARD_UPPER_LIMIT, self._limit_value(self._upper_limit_switch))
+        SmartDashboard.putBoolean(ARM_DASHBOARD_LOWER_LIMIT, self._limit_value(self._lower_limit_switch))

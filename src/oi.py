@@ -122,13 +122,7 @@ class OI:
         JoystickButtons.START = self._config.getint(OI.BUTTON_BINDING_SECTION, OI.START_KEY)
 
     def _init_button_binding(self) -> None:
-        # self._release_button = JoystickButton(
-        #     self._controllers[UserController.SCORING.value], JoystickButtons.RIGHTBUMPER
-        #
-        # )
-        # self._grab_button = JoystickButton(
-        #     self._controllers[UserController.SCORING.value], JoystickButtons.LEFTBUMPER
-        # )
+        pass
 
     def get_auto_choice(self) -> CommandGroupBase:
         """

@@ -28,18 +28,18 @@ class Grabber(SubsystemBase):
 
         self._channel = self._config.getint(Grabber.GENERAL_SECTION, Grabber.SOLENOID_CHANNEL_KEY)
         self._solenoid = Solenoid(PneumaticsModuleType.CTREPCM, self._channel)
-        SmartDashboard.putNumber("Grabber Solenoid DIO Channel", self._solenoid.getChannel())
+        SmartDashboard.putNumber("Grabber Solenoid DIO Channel", self._solenoid.getChannel())   
 
     def grab(self):
         if not self._enabled:
             return
-        self._solenoid.set(True ^ self._solenoid_inverted)
+        self._solenoid.set(True)
         Grabber.update_smartdashboard(self._solenoid.get())
 
     def release(self):
         if not self._enabled:
             return
-        self._solenoid.set(False ^ self._solenoid_inverted)
+        self._solenoid.set(False)
         Grabber.update_smartdashboard(self._solenoid.get())
 
     @staticmethod
