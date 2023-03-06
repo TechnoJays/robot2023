@@ -33,7 +33,11 @@ class Raise(CommandBase):
 
         Should initialize the measurement of the Arms position to "0" or the starting position
         """
+        self._arm.move(0.0)
         pass
+
+    def end(self, interrupted: bool) -> None:
+        self._arm.move(0.0)
 
     def execute(self) -> None:
         """
@@ -44,6 +48,16 @@ class Raise(CommandBase):
     def getRequirements(self) -> typing.Set[Subsystem]:
         return {self._arm}
 
+    def isFinished(self) -> bool:
+        """
+        Determines if the Arm should continue to raise based on whether the joystick button is
+        still pressed
+        """
+        return self._joyInput()
+
+    @property
+    def arm(self):
+        return self._arm
 
 
 class ArmMove(CommandBase):
@@ -72,7 +86,10 @@ class ArmMove(CommandBase):
 
         Should initialize the measurement of the Arms position to "0" or the starting position
         """
-        pass
+        self._arm.move(0.0)
+
+    def end(self, interrupted: bool) -> None:
+        self._arm.move(0.0)
 
     def execute(self) -> None:
         """
@@ -82,6 +99,15 @@ class ArmMove(CommandBase):
 
     def getRequirements(self) -> typing.Set[Subsystem]:
         return {self._arm}
+
+    def isFinished(self) -> bool:
+        """
+        Determines whether the Arm movement command is finished ... never
+
+        This command expects to be run indefinitely, and assumes it is never done until it
+        is interrupted
+        """
+        return False
 
 
 class Lower(CommandBase):
@@ -111,6 +137,9 @@ class Lower(CommandBase):
         """
         pass
 
+    def end(self, interrupted: bool) -> None:
+        self._arm.move(0.0)
+
     def execute(self) -> None:
         """
         The steps to execute everytime this command is called
@@ -139,7 +168,11 @@ class DoNothingArm(CommandBase):
 
     def initialize(self) -> None:
         """Called before the Command is run for the first time."""
-        pass
+        self._arm.move(0.0)
+
+    def end(self, interrupted: bool) -> None:
+        self._arm.move(0.0)
+        """Called once after isFinished returns true"""
 
     def execute(self) -> None:
         """Called repeatedly when this Command is scheduled to run"""
@@ -148,14 +181,6 @@ class DoNothingArm(CommandBase):
     def isFinished(self) -> bool:
         """Returns true when the Command no longer needs to be run"""
         return False
-
-    def end(self, **kwargs):
-        """Called once after isFinished returns true"""
-        pass
-
-    def interrupted(self):
-        """Called when another command which requires one or more of the same subsystems is scheduled to run"""
-        self.end()
 
     def getRequirements(self) -> typing.Set[Subsystem]:
         return {self._arm}
