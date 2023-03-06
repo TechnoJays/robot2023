@@ -31,13 +31,13 @@ class Grabber(SubsystemBase):
         SmartDashboard.putNumber("Grabber Solenoid DIO Channel", self._solenoid.getChannel())   
 
     def grab(self):
-        if not self._enabled:
+        if not self._enabled or not self._solenoid:
             return
         self._solenoid.set(True)
         Grabber.update_smartdashboard(self._solenoid.get())
 
     def release(self):
-        if not self._enabled:
+        if not self._enabled or not self._solenoid:
             return
         self._solenoid.set(False)
         Grabber.update_smartdashboard(self._solenoid.get())
