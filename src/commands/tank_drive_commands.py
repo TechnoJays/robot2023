@@ -65,17 +65,20 @@ class TankDrive(Command):
                 self.drivetrain.tank_drive(left_track, right_track)
         return Command.execute(self)
 
-    def isFinished(self):
-        """Returns true when the Command no longer needs to be run"""
+    def isFinished(self) -> bool:
+        """
+        If TankDrive is a registered command for the robot, it should be utilized
+        as the default command for the drivetrain. As the default command for the drivetrain
+        it is never finished
+        """
         return False
 
-    def end(self, **kwargs):
-        """Called once after isFinished returns true"""
+    def end(self, interrupted: bool) -> None:
+        """
+        This command expects to never be ended, and so does nothing when end is called
+        """
         pass
 
-    def interrupted(self):
-        """Called when another command which requires one or more of the same subsystems is scheduled to run"""
-        
     def getRequirements(self) -> typing.Set[Subsystem]:
         return {self._drivetrain}
 
