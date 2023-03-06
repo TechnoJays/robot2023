@@ -39,7 +39,7 @@ class Arm(SubsystemBase):
     def _init_components(self) -> None:
         self._max_stable_speed = self._config.getfloat(Arm.GENERAL_SECTION, Arm.MAX_STABLE_SPEED_KEY)
         # We have to be able to limit the max speed as some percentage of the max stable speed
-        self._max_speed = self._config.getfloat(Arm.GENERAL_SECTION, Arm.MAX_SPEED_KEY) % self._max_stable_speed
+        self._max_speed = self._config.getfloat(Arm.GENERAL_SECTION, Arm.MAX_SPEED_KEY)
 
         # initialize potentiometer for reading rotations on arm motor
         self._arm_pot_range = self._config.getfloat(Arm.POTENTIOMETER_SECTION, Arm.POT_RANGE_KEY)
