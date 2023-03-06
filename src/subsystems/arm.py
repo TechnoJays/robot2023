@@ -60,17 +60,15 @@ class Arm(SubsystemBase):
 
         self._modifier_scaling: Optional[float] = None
 
-        if self._config.getboolean(Arm.LOWER_LIMIT_SWITCH_SECTION, Arm.ENABLED_KEY):
-            self._lower_limit_switch = self._init_limit_switch(Arm.LOWER_LIMIT_SWITCH_SECTION)
-            self._lower_limit_switch_inverted = self._config.getboolean(
-                Arm.LOWER_LIMIT_SWITCH_SECTION, Arm.INVERTED_KEY
-            )
+        self._lower_limit_switch = self._init_limit_switch(Arm.LOWER_LIMIT_SWITCH_SECTION)
+        self._lower_limit_switch_inverted = self._config.getboolean(
+            Arm.LOWER_LIMIT_SWITCH_SECTION, Arm.INVERTED_KEY
+        )
 
-        if self._config.getboolean(Arm.UPPER_LIMIT_SWITCH_SECTION, Arm.ENABLED_KEY):
-            self._upper_limit_switch = self._init_limit_switch(Arm.UPPER_LIMIT_SWITCH_SECTION)
-            self._upper_limit_switch_inverted = self._config.getboolean(
-                Arm.UPPER_LIMIT_SWITCH_SECTION, Arm.INVERTED_KEY
-            )
+        self._upper_limit_switch = self._init_limit_switch(Arm.UPPER_LIMIT_SWITCH_SECTION)
+        self._upper_limit_switch_inverted = self._config.getboolean(
+            Arm.UPPER_LIMIT_SWITCH_SECTION, Arm.INVERTED_KEY
+        )
 
         Arm._update_smartdashboard(0.0, self._arm_pot.get())
 
