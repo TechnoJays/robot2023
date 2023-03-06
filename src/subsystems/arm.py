@@ -6,6 +6,14 @@ from typing import Optional
 
 from commands2 import SubsystemBase
 from wpilib import PWMVictorSPX, SmartDashboard, AnalogPotentiometer, DigitalInput
+from wpimath.filter import SlewRateLimiter
+
+ARM_DASHBOARD_ADJUSTED_SPEED = "0_Arm-02-Adjusted-Speed"
+ARM_DASHBOARD_LOWER_LIMIT = "0_Arm-06-Lower-Limit-Switch"
+ARM_DASHBOARD_POT_READING = "0_Arm-03-Potentiometer"
+ARM_DASHBOARD_SLEW_RATE = "0_Arm-04-Slew-Rate"
+ARM_DASHBOARD_SPEED = "0_Arm-01-Speed"
+ARM_DASHBOARD_UPPER_LIMIT = "0_Arm-05-Upper-Limit-Switch"
 
 
 class Arm(SubsystemBase):
@@ -23,6 +31,7 @@ class Arm(SubsystemBase):
     MAX_STABLE_SPEED_KEY = "MAX_STABLE_SPEED"
     MODIFIER_SCALING_KEY = "MODIFIER_SCALING"
     POT_RANGE_KEY = "FULL_RANGE"
+    SLEW_RATE = "SLEW_RATE"
 
     def __init__(
             self,
@@ -70,7 +79,13 @@ class Arm(SubsystemBase):
             Arm.UPPER_LIMIT_SWITCH_SECTION, Arm.INVERTED_KEY
         )
 
+        self._slew_rate_of_change = self._config.getfloat(
+            Arm.GENERAL_SECTION, Arm.SLEW_RATE
+        )
+        self._slew_rate = SlewRateLimiter(self._slew_rate_of_change)
+
         Arm._update_smartdashboard(0.0, 0.0, self._arm_pot.get())
+        self._smartdashboard_display_components()
 
     def _init_limit_switch(self, config_section: str) -> DigitalInput:
         """
@@ -96,6 +111,8 @@ class Arm(SubsystemBase):
 
         if self._motor:
             self._motor.set(adjusted_speed)
+            # uncomment to introduce to slew rate filter
+            # self._motor.set(self._slew_rate.calculate(adjusted_speed))
         Arm._update_smartdashboard(speed, adjusted_speed, self._arm_pot.get())
 
     # def move_angular(self, angle: float, speed: float) -> None:
@@ -139,6 +156,11 @@ class Arm(SubsystemBase):
 
     @staticmethod
     def _update_smartdashboard(speed: float, adjusted_speed: float, pot_reading: float) -> None:
-        SmartDashboard.putNumber("0_Arm-Speed", speed)
-        SmartDashboard.putNumber("0_Arm-Adjusted-Speed", adjusted_speed)
-        SmartDashboard.putNumber("0_Arm-Potentiometer", pot_reading)
+        SmartDashboard.putNumber(ARM_DASHBOARD_SPEED, speed)
+        SmartDashboard.putNumber(ARM_DASHBOARD_ADJUSTED_SPEED, adjusted_speed)
+        SmartDashboard.putNumber(ARM_DASHBOARD_POT_READING, pot_reading)
+
+    def _smartdashboard_display_components(self) -> None:
+        SmartDashboard.putNumber(ARM_DASHBOARD_SLEW_RATE, self._slew_rate_of_change)
+        SmartDashboard.putBoolean(ARM_DASHBOARD_UPPER_LIMIT, self._limit_value(self._upper_limit_switch.get()))
+        SmartDashboard.putBoolean(ARM_DASHBOARD_LOWER_LIMIT, self._limit_value(self._lower_limit_switch.get()))
