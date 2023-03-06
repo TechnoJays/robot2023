@@ -4,16 +4,15 @@
 import configparser
 from configparser import ConfigParser
 
-from commands2.button import JoystickButton
 import wpilib
 from commands2 import SubsystemBase, CommandBase, TimedCommandRobot
 from wpilib import SmartDashboard, SendableChooser
 
 from commands.arm_commands import ArmMove
 from commands.autonomous_drive_commands import MoveFromLine
-from commands.grabber_commands import Grab, Release
+from commands.grabber_commands import Grab, Release, DoNothingGrabber
 from commands.tank_drive_commands import TankDrive
-from oi import OI, JoystickAxis, UserController, JoystickButtons
+from oi import OI, JoystickAxis, UserController
 from subsystems.arm import Arm
 from subsystems.drivetrain import Drivetrain
 from subsystems.grabber import Grabber
@@ -91,11 +90,11 @@ class RobotController:
         )
 
         # set up the default grabber command to be "Grab"
-        self.grabber.setDefaultCommand(Grab(self.grabber))
+        self.grabber.setDefaultCommand(DoNothingGrabber(self.grabber))
 
         # set up the right bumper of the scoring controller to trigger the grabber to release
-        self.oi.scoring_controller.rightBumper().onTrue(Release(self.grabber)
-        # self.oi.release_button().whileHeld(Release(self.grabber))
+        self.oi.scoring_controller.rightBumper().onTrue(Grab(self.grabber))
+        self.oi.scoring_controller.leftBumper().onTrue(Release(self.grabber))
 
     def get_auto_choice(self) -> CommandBase:
         return self._oi.get_auto_choice()

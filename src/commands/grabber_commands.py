@@ -2,6 +2,7 @@
 # Open Source Software; you can modify and / or share it under the terms of
 # the MIT license file in the root directory of this project
 import typing
+
 from commands2 import CommandBase, Subsystem
 
 from subsystems.grabber import Grabber
@@ -26,12 +27,15 @@ class Grab(CommandBase):
         """
         self._grabber.grab()
 
+    def end(self, interrupted: bool) -> None:
+        pass
+
     def isFinished(self) -> bool:
         """
         The command should immediately stop executing once the signal to close has been sent
         """
         return True
-    
+
     def getRequirements(self) -> typing.Set[Subsystem]:
         return {self._grabber}
 
@@ -52,12 +56,15 @@ class Release(CommandBase):
         """
         self._grabber.release()
 
+    def end(self, interrupted: bool) -> None:
+        pass
+
     def isFinished(self) -> bool:
         """
         The command should immediately stop executing once the signal to close has been sent
         """
         return True
-    
+
     def getRequirements(self) -> typing.Set[Subsystem]:
         return {self._grabber}
 
@@ -82,6 +89,12 @@ class DoNothingGrabber(CommandBase):
         """
         pass
 
+    def execute(self) -> None:
+        """
+        Do nothing to change the state of the grabber
+        """
+        pass
+
     def isFinished(self) -> bool:
         """
         As the suggested default command for the grabber, this command is never finished until another command
@@ -90,6 +103,6 @@ class DoNothingGrabber(CommandBase):
         return False
         """
         return False
-    
+
     def getRequirements(self) -> typing.Set[Subsystem]:
         return {self._grabber}
