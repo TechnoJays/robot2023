@@ -129,5 +129,5 @@ class Arm(SubsystemBase):
 
     @staticmethod
     def _update_smartdashboard(speed: float, pot_reading: float) -> None:
-        SmartDashboard.putNumber("Arm Potentiometer", pot_reading)
-        SmartDashboard.putNumber("Arm Speed", speed)
+        SmartDashboard.putNumber("0_Arm-Potentiometer", pot_reading)
+        SmartDashboard.putNumber("0_Arm-Speed", speed)
