@@ -9,6 +9,7 @@ from wpilib import ADXRS450_Gyro
 from wpilib import PWMMotorController, PWMVictorSPX
 from wpilib import SmartDashboard
 from wpilib.drive import DifferentialDrive
+from wpimath.filter import SlewRateLimiter
 
 
 class Drivetrain(SubsystemBase):
@@ -62,6 +63,9 @@ class Drivetrain(SubsystemBase):
             self._robot_drive = DifferentialDrive(self._left_motor, self._right_motor)
             self._robot_drive.setSafetyEnabled(False)
 
+        self._l_slew_rate_limiter = SlewRateLimiter(0.5)
+        self._r_slew_rate_limiter = SlewRateLimiter(0.5)
+
     def _init_motor(self, config_section: str) -> PWMVictorSPX:
         motor = PWMVictorSPX(self._config.getint(config_section, Drivetrain.CHANNEL_KEY))
         motor.setInverted(self._config.getboolean(config_section, Drivetrain.INVERTED_KEY))
@@ -84,6 +88,7 @@ class Drivetrain(SubsystemBase):
         return self._arcade_rotation_modifier
 
     def tank_drive(self, left_speed: float, right_speed: float):
+        # TODO: Insert slew rate filters
         left = left_speed * self._max_speed
         right = right_speed * self._max_speed
         self._robot_drive.tankDrive(right, left, False)
@@ -161,3 +166,11 @@ class Drivetrain(SubsystemBase):
     @property
     def gyro(self):
         return self._gyro
+
+    @property
+    def left_slew_rate(self):
+        return self._l_slew_rate_limiter
+
+    @property
+    def right_slew_rate(self):
+        return self._r_slew_rate_limiter
