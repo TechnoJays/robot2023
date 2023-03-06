@@ -26,23 +26,27 @@ class DriveTime(CommandBase):
         """Called before the Command is run for the first time."""
         self._stopwatch.start()
 
-    def execute(self):
+    def execute(self) -> None:
         """Called repeatedly when this Command is scheduled to run"""
         self.drivetrain.arcade_drive(self._speed, 0.0, False)
         return Command.execute(self)
 
-    def isFinished(self):
+    def isFinished(self) -> bool:
         """Returns true when the Command no longer needs to be run"""
         return self._stopwatch.elapsed_time_in_secs() >= self._duration
 
-    def end(self, **kwargs):
+    def end(self, interrupted: bool) -> None:
         """Called once after isFinished returns true"""
         self._stopwatch.stop()
         self._drivetrain.arcade_drive(0.0, 0.0)
 
-    def interrupted(self):
-        """Called when another command which requires one or more of the same subsystems is scheduled to run"""
-        self.end()
+    def interrupted(self) -> None:
+        """
+        Called when another command which requires one or more of the same subsystems is scheduled to run
+
+        This method is removed and  no longer needs to be overriden
+        """
+        self.end(True)
 
     def getRequirements(self) -> set[Subsystem]:
         return {self._drivetrain}
@@ -82,21 +86,21 @@ class TurnDegrees(CommandBase):
         self._target_degrees = 0.0
         self.addRequirements(drivetrain)
 
-    def initialize(self):
+    def initialize(self) -> None:
         """Called before the Command is run for the first time."""
-        self._target_degrees = (
-                self._drivetrain.get_gyro_angle() + self._degrees_change
-        )
-        return Command.initialize(self)
+        self._target_degrees = (self._drivetrain.get_gyro_angle() + self._degrees_change)
 
-    def execute(self):
-        """Called repeatedly when this Command is scheduled to run"""
+    def execute(self) -> None:
+        """
+        Called repeatedly when this Command is scheduled to run
+
+
+        """
         degrees_left = self._target_degrees - self._drivetrain.get_gyro_angle()
         turn_speed = self._speed * TurnDegrees._determine_direction(degrees_left)
         self._drivetrain.arcade_drive(0.0, turn_speed, False)
-        return Command.execute(self)
 
-    def isFinished(self):
+    def isFinished(self) -> bool:
         """Returns true when the Command no longer needs to be run"""
         current = self._drivetrain.get_gyro_angle()
         # If abs(target - current) < threshold then return true
@@ -104,13 +108,9 @@ class TurnDegrees(CommandBase):
                 math.fabs(self._target_degrees - current) <= self._degree_threshold
         )
 
-    def end(self, **kwargs):
+    def end(self, interrupted: bool) -> None:
         """Called once after isFinished returns true"""
         self._drivetrain.arcade_drive(0.0, 0.0)
-
-    def interrupted(self):
-        """Called when another command which requires one or more of the same subsystems is scheduled to run"""
-        self.end()
 
     @staticmethod
     def _determine_direction(degrees_left: float) -> float:
@@ -155,11 +155,11 @@ class TurnDegreesAbsolute(CommandBase):
         self._degree_threshold = threshold
         self.addRequirements(drivetrain)
 
-    def initialize(self):
+    def initialize(self) -> None:
         """Called before the Command is run for the first time."""
         return Command.initialize(self)
 
-    def execute(self):
+    def execute(self) -> None:
         """Called repeatedly when this Command is scheduled to run"""
         degrees_left = self._target_degrees - self._drivetrain.get_gyro_angle()
         turn_speed = self._speed * TurnDegreesAbsolute._determine_direction(
@@ -168,7 +168,7 @@ class TurnDegreesAbsolute(CommandBase):
         self._drivetrain.arcade_drive(0.0, turn_speed, False)
         return Command.execute(self)
 
-    def isFinished(self):
+    def isFinished(self) -> bool:
         """Returns true when the Command no longer needs to be run"""
         current = self._drivetrain.get_gyro_angle()
         # If abs(target - current) < threshold then return true
@@ -176,13 +176,9 @@ class TurnDegreesAbsolute(CommandBase):
                 math.fabs(self._target_degrees - current) <= self._degree_threshold
         )
 
-    def end(self, **kwargs):
+    def end(self, interrupted: bool) -> None:
         """Called once after isFinished returns true"""
         self._drivetrain.arcade_drive(0.0, 0.0)
-
-    def interrupted(self):
-        """Called when another command which requires one or more of the same subsystems is scheduled to run"""
-        self.end()
 
     @staticmethod
     def _determine_direction(degrees_left: float) -> float:
@@ -233,20 +229,16 @@ class TurnTime(CommandBase):
         """Called repeatedly when this Command is scheduled to run"""
         self._drivetrain.arcade_drive(0.0, self._speed, False)
 
-    def isFinished(self):
+    def isFinished(self) -> bool:
         """Returns true when the Command no longer needs to be run"""
         return (
                 self._stopwatch.elapsed_time_in_secs() >= self._duration
         )
 
-    def end(self, **kwargs):
+    def end(self, interrupted: bool) -> None:
         """Called once after isFinished returns true"""
         self._stopwatch.stop()
         self._drivetrain.arcade_drive(0.0, 0.0)
-
-    def interrupted(self):
-        """Called when another command which requires one or more of the same subsystems is scheduled to run"""
-        self.end()
 
     @property
     def drivetrain(self):
