@@ -70,7 +70,7 @@ class Arm(SubsystemBase):
             Arm.UPPER_LIMIT_SWITCH_SECTION, Arm.INVERTED_KEY
         )
 
-        Arm._update_smartdashboard(0.0, self._arm_pot.get())
+        Arm._update_smartdashboard(0.0, 0.0, self._arm_pot.get())
 
     def _init_limit_switch(self, config_section: str) -> DigitalInput:
         """
@@ -96,7 +96,7 @@ class Arm(SubsystemBase):
 
         if self._motor:
             self._motor.set(adjusted_speed)
-        Arm._update_smartdashboard(adjusted_speed, self._arm_pot.get())
+        Arm._update_smartdashboard(speed, adjusted_speed, self._arm_pot.get())
 
     # def move_angular(self, angle: float, speed: float) -> None:
     #     if not self._enabled:
@@ -106,17 +106,29 @@ class Arm(SubsystemBase):
     #     if self._motor:
     #         self._motor.set(adjusted_speed)
 
-    def is_fully_retracted(self) -> bool:
-        """
-        Has the Arm lowered to the point that it has engaged the lower limit switch
-        """
-        return self._lower_limit_switch_inverted ^ self._limit_value(self._lower_limit_switch)
-
     def is_fully_extended(self) -> bool:
         """
-        Has the Arm raised to the point that it has engage the upper limit switch
+        Check upper limit switch to determine if the Arm has raised to its upper constraint
         """
-        return self._lower_limit_switch_inverted ^ self._limit_value(self._upper_limit_switch)
+        extended = self._limit_value(
+            self._upper_limit_switch) if not self._upper_limit_switch_inverted else not self._limit_value(
+            self._upper_limit_switch)
+        # TODO comment out once completed debugging
+        if extended:
+            print("[ARM]: --upper-- limit switch engaged")
+        return extended
+
+    def is_fully_retracted(self) -> bool:
+        """
+        Check lower limit switch to determine if the Arm has lowered to its lower constraint
+        """
+        retracted = self._limit_value(
+            self._lower_limit_switch) if not self._lower_limit_switch_inverted else not self._limit_value(
+            self._lower_limit_switch)
+        # TODO comment out once completed debugging
+        if retracted:
+            print("[ARM]: --lower-- limit switch engaged")
+        return retracted
 
     @staticmethod
     def _limit_value(switch: DigitalInput) -> bool:
@@ -126,6 +138,7 @@ class Arm(SubsystemBase):
             return False
 
     @staticmethod
-    def _update_smartdashboard(speed: float, pot_reading: float) -> None:
-        SmartDashboard.putNumber("0_Arm-Potentiometer", pot_reading)
+    def _update_smartdashboard(speed: float, adjusted_speed: float, pot_reading: float) -> None:
         SmartDashboard.putNumber("0_Arm-Speed", speed)
+        SmartDashboard.putNumber("0_Arm-Adjusted-Speed", adjusted_speed)
+        SmartDashboard.putNumber("0_Arm-Potentiometer", pot_reading)
