@@ -121,7 +121,10 @@ class OI:
         JoystickButtons.BACK = self._config.getint(OI.BUTTON_BINDING_SECTION, OI.BACK_KEY)
         JoystickButtons.START = self._config.getint(OI.BUTTON_BINDING_SECTION, OI.START_KEY)
 
-    def _init_button_binding(self) -> None:
+    def _init_button_binding(self) -> None: 
+        """
+        Originally where the buttons were bound to controllers
+        """
         pass
 
     def get_auto_choice(self) -> CommandGroupBase:

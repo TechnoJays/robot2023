@@ -33,6 +33,13 @@ class RetrojaysRobot(TimedCommandRobot):
         self._robot_controller = RobotController(self)
         self._robot_controller.mappings()
 
+    def robotPeriodic(self) -> None:
+        """
+        Ensures commands are run
+        """
+        self._robot_controller.update_sensors()
+        CommandScheduler.getInstance().run()
+
     def teleopInit(self):
         pass
 
@@ -42,7 +49,7 @@ class RetrojaysRobot(TimedCommandRobot):
         The scheduler is what runs the periodic processes for managing
         commands during autonomous
         """
-        CommandScheduler.getInstance().run()
+        pass
 
     def testInit(self):
         pass

@@ -108,6 +108,10 @@ class RobotController:
         )
         SmartDashboard.putData("Autonomous", self._auto_program_chooser)
         return self._auto_program_chooser
+    
+    def update_sensors(self) -> None:
+        SmartDashboard.putBoolean("0_Arm-05-RAW-Upper-Limit-Switch", self._arm.upper_limit_switch.get())
+        SmartDashboard.putBoolean("0_Arm-05-RAW-Lower-Limit-Switch", self._arm.lower_limit_switch.get())
 
     @property
     def drivetrain(self) -> Drivetrain:
