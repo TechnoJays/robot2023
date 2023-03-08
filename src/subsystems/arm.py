@@ -133,7 +133,7 @@ class Arm(SubsystemBase):
         # TODO comment out once completed debugging
         if extended:
             print("[ARM]: --upper-- limit switch engaged")
-        return False
+        return extended
 
     def is_fully_retracted(self) -> bool:
         """
@@ -145,7 +145,7 @@ class Arm(SubsystemBase):
         # TODO comment out once completed debugging
         if retracted:
             print("[ARM]: --lower-- limit switch engaged")
-        return False
+        return retracted
 
     @staticmethod
     def _limit_value(switch: DigitalInput) -> bool:
