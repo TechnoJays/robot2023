@@ -1,8 +1,11 @@
 import wpilib
+import logging
 from commands2 import CommandScheduler
 from commands2 import TimedCommandRobot
 
 from robot_controller import RobotController
+
+logging.basicConfig(level=logging.INFO)
 
 
 class RetrojaysRobot(TimedCommandRobot):
