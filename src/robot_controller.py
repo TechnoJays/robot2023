@@ -64,8 +64,9 @@ class RobotController:
 
         self._grabber = Grabber(self._subsystems_config)
         subsystems.append(self._grabber)
+        wpilib.CameraServer.launch(vision_py='vision/vision.py:start')
 
-        wpilib.CameraServer.launch()
+        # wpilib.CameraServer.launch()
 
         return subsystems
 
