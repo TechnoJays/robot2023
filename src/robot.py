@@ -13,9 +13,14 @@ class RetrojaysRobot(TimedCommandRobot):
 
     def autonomousInit(self):
         # Schedule the autonomous command
+        # autonomous_command = MoveFromLine(
+            # self._robot_controller.drivetrain,
+            # self._robot_controller.autonomous_config
+        # )
         # TODO move into robot controller for better mgmt?
         autonomous_command = self._robot_controller.get_auto_choice()
-        autonomous_command.start()
+        if autonomous_command:
+            autonomous_command.start()
 
     def autonomousPeriodic(self):
         """
