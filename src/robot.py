@@ -2,6 +2,7 @@ import wpilib
 import logging
 from commands2 import CommandScheduler
 from commands2 import TimedCommandRobot
+from commands.autonomous_drive_commands import MoveFromLine
 
 from robot_controller import RobotController
 
