@@ -15,11 +15,11 @@ Southfield High School Team 94 (NinetyFouriors) robot.
 It is highly recommended that you use an python environment manager with python to help as the version
 of python required by pyfrc changes.
 
-* [pyenv] is useful for managing multiple python versions (3.8) on your computer: **NOTE your python version and pip version/dependencies are highly correlated**
+* [pyenv] is useful for managing multiple python versions on your computer: **NOTE your python version and pip version/dependencies are highly correlated**
   * `brew install pyenv` for macOS and [Homebrew]
     * `scoop install python` with [Scoop] is the closest thing if you have the misfortune to be using Windows and possibly follow [this page] for more instructions on supporting different python versions
   * [pipenv] is useful for dependency management for this project as well
-  * `pipenv --python 3.11` to create a python 3.8 environment for this project
+  * `pipenv --python 3.11` to create a python 3.11 environment for this project
   * `pipenv install -e .` to setup this project in the created virtualenv
   * `pipenv shell` to enter the environment for this project
   * `tox` after that to run the tests
@@ -67,11 +67,32 @@ will let the reformatting goodness happen. Black comes with the `pipenv install 
 
 ## Deploying to the Robot
 
+### Accessing the Robot
+
+The robot can be reached over ethernet or local usb connection.
+
+With the robot connected to USB, your best bet is to attempt to connect with
+
+```bash
+# lvuser is the user where robot code is deployed
+ssh lvuser@roborio-94-frc.local
+```
+
+If you know the IP of the robot, it can be can accessed at:
+
+```bash
+# note IP assignment is done dynamically through DHCP, so this IP address may
+# not always be true
+ssh lvuser@169.254.171.191
+```
+These steps are useful for confirming connectivity to the robot before
+attempting to deploy.
+
+### Running robotPy Deployment commands
+
 * Copy/install all .py files in the src/robot folder to the robot.
 
 RobotPy has some great [robot code deployment instructions and automation].
-Note that the RobotPy deployment process will automatically run the tests for the project as
-part of the deployment to try and protect us from ourselves.
 
 ```bash
 python3 robot.py deploy --netconsole
