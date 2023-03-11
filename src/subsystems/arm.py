@@ -130,9 +130,6 @@ class Arm(SubsystemBase):
         extended = self._limit_value(
             self._upper_limit_switch) if not self._upper_limit_switch_inverted else not self._limit_value(
             self._upper_limit_switch)
-        # TODO comment out once completed debugging
-        if extended:
-            print("[ARM]: --upper-- limit switch engaged")
         return extended
 
     def is_fully_retracted(self) -> bool:
@@ -142,9 +139,6 @@ class Arm(SubsystemBase):
         retracted = self._limit_value(
             self._lower_limit_switch) if not self._lower_limit_switch_inverted else not self._limit_value(
             self._lower_limit_switch)
-        # TODO comment out once completed debugging
-        if retracted:
-            print("[ARM]: --lower-- limit switch engaged")
         return retracted
 
     @staticmethod
