@@ -27,3 +27,4 @@ dependencies = [
     "wpilib",
     "numpy",
 ]
+dynamic = ["version"]
