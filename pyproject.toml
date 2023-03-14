@@ -5,7 +5,8 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "team94_robot-2023"
 authors = [
-    { name = "Derelle Redmond", email = "team94frc@gmail.com" }
+    { name = "Retrojays", email = "team94frc@gmail.com" },
+    { name = "Derelle Redmond"}
 ]
 description = "Team 94: 2023 Retrojays Robot Code"
 readme = "README.md"
