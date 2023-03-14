@@ -67,32 +67,6 @@ def test__init_dead_zone(oi_joy_ports: OI, config_joy_ports_01: ConfigParser):
     assert oi_joy_ports.controllers()[1] is not None
 
 
-def test__init_joystick_binding(oi_default: OI, config_default: ConfigParser):
-    assert oi_default is not None
-    assert oi_default.config() == config_default
-
-    assert JoystickAxis.LEFTX == config_default.getint(OI.AXIS_BINDING_SECTION, OI.LEFT_X_KEY)
-    assert JoystickAxis.LEFTY == config_default.getint(OI.AXIS_BINDING_SECTION, OI.LEFT_Y_KEY)
-    assert JoystickAxis.RIGHTX == config_default.getint(OI.AXIS_BINDING_SECTION, OI.RIGHT_X_KEY)
-    assert JoystickAxis.RIGHTY == config_default.getint(OI.AXIS_BINDING_SECTION, OI.RIGHT_Y_KEY)
-
-    assert JoystickAxis.DPADX == config_default.getint(OI.AXIS_BINDING_SECTION, OI.DPAD_X_KEY)
-    assert JoystickAxis.DPADY == config_default.getint(OI.AXIS_BINDING_SECTION, OI.DPAD_Y_KEY)
-
-    assert JoystickButtons.X == config_default.getint(OI.BUTTON_BINDING_SECTION, OI.X_KEY)
-    assert JoystickButtons.A == config_default.getint(OI.BUTTON_BINDING_SECTION, OI.A_KEY)
-    assert JoystickButtons.B == config_default.getint(OI.BUTTON_BINDING_SECTION, OI.B_KEY)
-    assert JoystickButtons.Y == config_default.getint(OI.BUTTON_BINDING_SECTION, OI.Y_KEY)
-
-    assert JoystickButtons.LEFTBUMPER == config_default.getint(OI.BUTTON_BINDING_SECTION, OI.LEFT_BUMPER_KEY)
-    assert JoystickButtons.RIGHTBUMPER == config_default.getint(OI.BUTTON_BINDING_SECTION, OI.RIGHT_BUMPER_KEY)
-    assert JoystickButtons.LEFTTRIGGER == config_default.getint(OI.BUTTON_BINDING_SECTION, OI.LEFT_TRIGGER_KEY)
-    assert JoystickButtons.RIGHTTRIGGER == config_default.getint(OI.BUTTON_BINDING_SECTION, OI.RIGHT_TRIGGER_KEY)
-
-    assert JoystickButtons.BACK == config_default.getint(OI.BUTTON_BINDING_SECTION, OI.BACK_KEY)
-    assert JoystickButtons.START == config_default.getint(OI.BUTTON_BINDING_SECTION, OI.START_KEY)
-
-
 @pytest.mark.skip(reason="don't know why robot is None for this test")
 def test__setup_autonomous_smartdashboard(drivetrain_default: Drivetrain,
                                           oi_default: OI, config_auto: ConfigParser):
@@ -100,14 +74,6 @@ def test__setup_autonomous_smartdashboard(drivetrain_default: Drivetrain,
     auto_chooser = oi_default._setup_autonomous_smartdashboard(drivetrain_default, config_auto)
     assert auto_chooser is not None
     assert type(auto_chooser.getSelected()) is MoveFromLine
-
-
-def test__init_button_bindings(oi_default):
-    assert oi_default is not None
-    assert oi_default.grab_button() is not None
-    assert type(oi_default.grab_button()) is JoystickButton
-    assert oi_default.release_button() is not None
-    assert type(oi_default.release_button()) is JoystickButton
 
 
 @pytest.mark.skip(reason="requires setup_autonomous_dashboard")

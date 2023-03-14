@@ -2,9 +2,8 @@ import configparser
 from enum import Enum
 
 from commands2 import CommandGroupBase
-from commands2.button import JoystickButton
 from commands2.button import CommandXboxController
-import commands2.cmd
+from commands2.button import JoystickButton
 from wpilib import DriverStation
 from wpilib import Joystick
 from wpilib import SendableChooser
@@ -84,8 +83,6 @@ class OI:
             self._dead_zones.append(self._init_dead_zone(i))
 
         print(self._controllers)
-        self._init_joystick_binding()
-        self._init_button_binding()
         self._driver_controller = self._controllers[0]
         self._scoring_controller = self._controllers[1]
         self._auto_program_chooser: SendableChooser = SendableChooser()
@@ -98,34 +95,6 @@ class OI:
     def _init_dead_zone(self, driver: int) -> float:
         config_section = OI.JOY_CONFIG_SECTION + str(driver)
         return self._config.getfloat(config_section, OI.DEAD_ZONE_KEY)
-
-    def _init_joystick_binding(self):
-        JoystickAxis.LEFTX = self._config.getint(OI.AXIS_BINDING_SECTION, OI.LEFT_X_KEY)
-        JoystickAxis.LEFTY = self._config.getint(OI.AXIS_BINDING_SECTION, OI.LEFT_Y_KEY)
-        JoystickAxis.RIGHTX = self._config.getint(OI.AXIS_BINDING_SECTION, OI.RIGHT_X_KEY)
-        JoystickAxis.RIGHTY = self._config.getint(OI.AXIS_BINDING_SECTION, OI.RIGHT_Y_KEY)
-
-        JoystickAxis.DPADX = self._config.getint(OI.AXIS_BINDING_SECTION, OI.DPAD_X_KEY)
-        JoystickAxis.DPADY = self._config.getint(OI.AXIS_BINDING_SECTION, OI.DPAD_Y_KEY)
-
-        JoystickButtons.X = self._config.getint(OI.BUTTON_BINDING_SECTION, OI.X_KEY)
-        JoystickButtons.A = self._config.getint(OI.BUTTON_BINDING_SECTION, OI.A_KEY)
-        JoystickButtons.B = self._config.getint(OI.BUTTON_BINDING_SECTION, OI.B_KEY)
-        JoystickButtons.Y = self._config.getint(OI.BUTTON_BINDING_SECTION, OI.Y_KEY)
-
-        JoystickButtons.LEFTBUMPER = self._config.getint(OI.BUTTON_BINDING_SECTION, OI.LEFT_BUMPER_KEY)
-        JoystickButtons.RIGHTBUMPER = self._config.getint(OI.BUTTON_BINDING_SECTION, OI.RIGHT_BUMPER_KEY)
-        JoystickButtons.LEFTTRIGGER = self._config.getint(OI.BUTTON_BINDING_SECTION, OI.LEFT_TRIGGER_KEY)
-        JoystickButtons.RIGHTTRIGGER = self._config.getint(OI.BUTTON_BINDING_SECTION, OI.RIGHT_TRIGGER_KEY)
-
-        JoystickButtons.BACK = self._config.getint(OI.BUTTON_BINDING_SECTION, OI.BACK_KEY)
-        JoystickButtons.START = self._config.getint(OI.BUTTON_BINDING_SECTION, OI.START_KEY)
-
-    def _init_button_binding(self) -> None: 
-        """
-        Originally where the buttons were bound to controllers
-        """
-        pass
 
     def get_auto_choice(self) -> CommandGroupBase:
         """
@@ -193,16 +162,16 @@ class OI:
     def auto_chooser(self) -> SendableChooser:
         return self._auto_program_chooser
 
-    def grab_button(self) -> JoystickButton:
-        return self._grab_button
+    def grabbed(self) -> bool:
+        return self._scoring_controller.getRightBumper()
 
-    def release_button(self) -> JoystickButton:
-        return self._release_button
-    
+    def released(self) -> JoystickButton:
+        return self._scoring_controller.getLeftBumper()
+
     @property
     def scoring_controller(self) -> CommandXboxController:
         return self._scoring_controller
-    
+
     @property
     def driver_controller(self) -> CommandXboxController:
         return self._driver_controller
