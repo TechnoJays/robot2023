@@ -93,8 +93,6 @@ class TurnDegrees(CommandBase):
     def execute(self) -> None:
         """
         Called repeatedly when this Command is scheduled to run
-
-
         """
         degrees_left = self._target_degrees - self._drivetrain.get_gyro_angle()
         turn_speed = self._speed * TurnDegrees._determine_direction(degrees_left)
