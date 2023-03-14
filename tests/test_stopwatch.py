@@ -1,6 +1,8 @@
-import pytest
-from util.stopwatch import Stopwatch
 from time import sleep
+
+import pytest
+
+from util.stopwatch import Stopwatch
 
 
 @pytest.fixture(scope="function")
