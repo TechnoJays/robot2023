@@ -6,7 +6,6 @@ from wpilib.simulation import PWMSim
 
 from commands.arcade_drive_commands import DriveTime
 from subsystems.drivetrain import Drivetrain
-from util.stopwatch import Stopwatch
 
 
 @pytest.fixture(scope="function")
@@ -111,51 +110,52 @@ def test_end(
     left_motor_sim = PWMSim(drivetrain_default._left_motor.getChannel())
     right_motor_sim = PWMSim(drivetrain_default._right_motor.getChannel())
 
-    # then: the speed of both motors should match the spped from the command
+    # then: the speed of both motors should match the speed from the command
     assert 0.0 == pytest.approx(left_motor_sim.getSpeed())
     assert 0.0 == pytest.approx(right_motor_sim.getSpeed())
 
 
-def isclose(a, b, rel_tol=0.1, abs_tol=0.0):
+def is_close(a, b, rel_tol=0.1, abs_tol=0.0):
     return abs(a - b) <= max(rel_tol * max(abs(a), abs(b)), abs_tol)
 
 
 @pytest.mark.parametrize(
-    "duration,speed,timeout,left_ex_speed,right_ex_speed",
+    "duration,speed,left_ex_speed,right_ex_speed",
     [
-        (0.5, 0.5, 5.0, 0.5306122448979592, -0.5306122448979592),
-        (2.0, 1.0, 15.0, 1.0, -1.0),
-        # (5.0, 1.0, 1.0, 1.0, -1.0), # Timeouts don't seem to work in testing
+        (0.5, 0.5, 0.5306122448979592, -0.5306122448979592),
+        (1.5, 1.0, 1.0, -1.0),
+        (2.0, 1.0, -1.0, 1.0),
     ],
 )
 def test_command_full(
         drivetrain_default: Drivetrain,
         duration: float,
         speed: float,
-        timeout: float,
         left_ex_speed: float,
         right_ex_speed: float,
 ):
-    # given: a drivetrain
+    # given: a drivetrain (in drivetrain_default)
+    assert drivetrain_default is not None
 
     # and: left and right motors on the drive train
     left_motor_sim = PWMSim(drivetrain_default._left_motor.getChannel())
     right_motor_sim = PWMSim(drivetrain_default._right_motor.getChannel())
 
+    # and: a command to drive with a duration and speed, measured by a stopwatch
     dt = DriveTime(drivetrain_default, duration, speed)
-    sw = Stopwatch()
 
+    # when: initializing the command to start
     dt.initialize()
-    sw.start()
+
+    # and: the command is processed until it is finished
     while not dt.isFinished():
         dt.execute()
         pytest.approx(left_ex_speed, left_motor_sim.getSpeed())
         pytest.approx(right_ex_speed, right_motor_sim.getSpeed())
 
-    dt.end()
-    sw.stop()
-    if duration < timeout:
-        assert isclose(sw.elapsed_time_in_secs(), duration)
-    else:
-        # TODO: Timeouts don't seem to work in testing?
-        assert isclose(sw.elapsed_time_in_secs(), timeout)
+    # and: the command is ended, uninterrupted
+    dt.end(True)
+
+    # then: the elapsed time on the commands internal stopwatch should be close to the duration
+    # specified in the command (close because processing time is unpredictable)
+    assert is_close(dt.stopwatch.elapsed_time_in_secs(), duration)

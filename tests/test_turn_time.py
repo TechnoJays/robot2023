@@ -6,7 +6,6 @@ from wpilib.simulation import PWMSim
 
 from commands.arcade_drive_commands import TurnTime
 from subsystems.drivetrain import Drivetrain
-from util.stopwatch import Stopwatch
 
 
 @pytest.fixture(scope="function")
@@ -86,44 +85,49 @@ def test_interrupted(command_default):
     pass  # interrupted method is empty
 
 
-def isclose(a, b, rel_tol=0.1, abs_tol=0.0):
+def is_close(a, b, rel_tol=0.1, abs_tol=0.0):
     return abs(a - b) <= max(rel_tol * max(abs(a), abs(b)), abs_tol)
 
 
 @pytest.mark.parametrize(
-    "duration,timeout, speed,left_ex_speed,right_ex_speed",
+    "duration, speed, left_ex_speed, right_ex_speed",
     [
-        (0.5, 5.0, 0.5, -0.5306122448979592, -0.5306122448979592),
-        (0.5, 5.0, -0.5, 0.5306122448979592, 0.5306122448979592),
-        (2.0, 15.0, 1.0, -1.0, -1.0),
-        # (5.0, 1.0, 1.0, 1.0, -1.0), # Timeouts don't seem to work in testing
+        (0.5, 0.5, -0.5306122448979592, -0.5306122448979592),
+        (0.5, -0.5, 0.5306122448979592, 0.5306122448979592),
+        (1.3, 1.0, -1.0, 1.0),
+        (2.1, 1.0, 1.0, -1.0),
     ],
 )
 def test_command_full(
         drivetrain_default: Drivetrain,
         duration: float,
-        timeout: float,
         speed: float,
         left_ex_speed: float,
         right_ex_speed: float,
 ):
-    dt = TurnTime(drivetrain_default, duration, speed)
-    sw = Stopwatch()
-    assert dt is not None
+    # given: a drivetrain (in drivetrain default)
+    assert drivetrain_default is not None
 
+    # and: left and right motors on the drivetrain
     left_m = PWMSim(drivetrain_default._left_motor.getChannel())
     right_m = PWMSim(drivetrain_default._right_motor.getChannel())
 
-    dt.initialize()
-    sw.start()
-    while not dt.isFinished():
-        dt.execute()
+    # and: a command to turn the robot for some time period
+    tt = TurnTime(drivetrain_default, duration, speed)
+    assert tt is not None
+
+    # when: initializing the command to start
+    tt.initialize()
+
+    # and: the command is processed until is finished
+    while not tt.isFinished():
+        tt.execute()
         pytest.approx(left_ex_speed, left_m.getSpeed())
         pytest.approx(right_ex_speed, right_m.getSpeed())
-    dt.end()
-    sw.stop()
-    if duration < timeout:
-        assert isclose(sw.elapsed_time_in_secs(), duration)
-    else:
-        # TODO: Timeouts don't seem to work in testing?
-        assert isclose(sw.elapsed_time_in_secs(), timeout)
+
+    # and: the command is ended, uninterrupted
+    tt.end(False)
+
+    # then: the elapsed time on the commands internal stopwatch should be close to the duration
+    # specified in the command (close because processing time is unpredictable)
+    assert is_close(tt.stopwatch.elapsed_time_in_secs(), duration)
