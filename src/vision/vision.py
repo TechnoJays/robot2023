@@ -10,7 +10,7 @@ def start_camera():
 
     cv_sink = CS.getVideo()
 
-    output_stream = CS.putVideo("Rectangle", 324, 420)
+    output_stream = CS.putVideo("Rectangle", 320, 420)
 
     img = np.zeros(shape=(420, 320, 3), dtype=np.uint8)
 
