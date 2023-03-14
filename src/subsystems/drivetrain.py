@@ -27,6 +27,7 @@ class Drivetrain(SubsystemBase):
     CHANNEL_KEY = "CHANNEL"
     REVERSED_KEY = "REVERSED"
     MAX_SPEED_KEY = "MAX_SPEED"
+    DEFAULT_SCALING_KEY = "DEFAULT_SCALING"
     MODIFIER_SCALING_KEY = "MODIFIER_SCALING"
     DPAD_SCALING_KEY = "DPAD_SCALING"
 
@@ -54,6 +55,9 @@ class Drivetrain(SubsystemBase):
         )
         self._dpad_scaling = self._config.getfloat(
             Drivetrain.GENERAL_SECTION, Drivetrain.DPAD_SCALING_KEY
+        )
+        self._default_scaling = self._config.getfloat(
+            Drivetrain.GENERAL_SECTION, Drivetrain.DEFAULT_SCALING_KEY
         )
 
         self._left_motor = self._init_motor(Drivetrain.LEFT_MOTOR_SECTION)
@@ -157,6 +161,10 @@ class Drivetrain(SubsystemBase):
     @property
     def dpad_scaling(self) -> float:
         return self._dpad_scaling
+    
+    @property
+    def default_scaling(self) -> float:
+        return self._default_scaling
 
     def get_gyro_angle(self) -> float:
         if self._gyro:

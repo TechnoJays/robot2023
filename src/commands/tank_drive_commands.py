@@ -42,27 +42,26 @@ class TankDrive(Command):
 
     def execute(self):
         """Called repeatedly when this Command is scheduled to run"""
-        modifier: bool = self.oi.get_button_state(
-            UserController.DRIVER, JoystickButtons.LEFTBUMPER
-        )
+        slow: bool = self.oi.driver_controller.getLeftBumper()
+        turbo: bool = self.oi.driver_controller.getRightBumper()
         dpad_y: float = self.oi.get_axis(
             UserController.DRIVER, JoystickAxis.DPADY
         )
+
+        modifier = self._drivetrain.default_scaling
+
+        if slow:
+            modifier = self._drivetrain.modifier_scaling
+        elif turbo:
+            modifier = 1.0
+
         if dpad_y != 0.0:
             self.drivetrain.arcade_drive(self._dpad_scaling * dpad_y, 0.0)
         else:
-            left_track: float = self.oi.get_axis(
-                UserController.DRIVER, JoystickAxis.LEFTY
-            )
-            right_track: float = self.oi.get_axis(
-                UserController.DRIVER, JoystickAxis.RIGHTY
-            )
-            if modifier:
-                self.drivetrain.tank_drive(
-                    self._stick_scaling * left_track, self._stick_scaling * right_track
-                )
-            else:
-                self.drivetrain.tank_drive(left_track, right_track)
+            left_track: float = self.oi.driver_controller.getLeftY()
+            right_track: float = self.oi.driver_controller.getRightY()
+
+        self.drivetrain.tank_drive(left_track * modifier, right_track * modifier)
         return Command.execute(self)
 
     def isFinished(self) -> bool:
