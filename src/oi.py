@@ -82,7 +82,6 @@ class OI:
             self._controllers.append(self._init_joystick(i))
             self._dead_zones.append(self._init_dead_zone(i))
 
-        print(self._controllers)
         self._driver_controller = self._controllers[0]
         self._scoring_controller = self._controllers[1]
         self._auto_program_chooser: SendableChooser = SendableChooser()
