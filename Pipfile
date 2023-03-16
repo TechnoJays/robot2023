@@ -5,6 +5,7 @@ verify_ssl = true
 
 [dev-packages]
 tox = "*"
+black = "*"
 
 [packages]
 team94-robot-2023 = { editable = true, path = "." }
