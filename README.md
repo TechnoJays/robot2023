@@ -21,7 +21,7 @@ by pyfrc changes year over year.
         * On windows, you can use`scoop install python` with [Scoop] as the closest thing to Homebrew
           (if you have the misfortune to be using Windows and possibly follow [this page] for more instructions on
           supporting different python versions
-* [pipenv] is useful for dependency management for this project as well
+* [pipenv] is required for dependency management for this project as well
     * `pipenv --python 3.11` to create a python 3.11 environment for this project
     * `pipenv install` to setup this project in the created virtualenv
     * `pipenv install --dev` to install tox in the environment
