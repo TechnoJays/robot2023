@@ -1,8 +1,6 @@
-import wpilib.simulation
-
+from pyfrc.physics import drivetrains
 from pyfrc.physics.core import PhysicsInterface
-from pyfrc.physics import motor_cfgs, drivetrains, tankmodel
-from pyfrc.physics.units import units
+from wpilib import PneumaticsModuleType
 from wpilib.simulation import PWMSim, DIOSim, SolenoidSim
 
 from robot import RetrojaysRobot
@@ -27,11 +25,10 @@ class PhysicsEngine(object):
         self.arm_upper_limit = DIOSim(robot.controller.arm.upper_limit_switch)
         self.arm_lower_limit = DIOSim(robot.controller.arm.lower_limit_switch)
 
-        self.grabber_solenoid = SolenoidSim(robot.controller.grabber.solenoid.getChannel())
+        self.grabber_solenoid = SolenoidSim(PneumaticsModuleType.CTREPCM,
+                                            robot.controller.grabber.solenoid.getChannel())
 
-
-
-    def update_sim(self, hal_data, now, tm_diff):
+    def update_sim(self, now, tm_diff):
         """
         Called when the simulation parameters for the program need to be
         updated.
@@ -59,10 +56,5 @@ class PhysicsEngine(object):
             'type': 'talon'
         },...]
         """
+        pass
 
-        # Simulate the drivetrain
-        l_motor = hal_data["pwm"][5]["value"]
-        r_motor = hal_data["pwm"][4]["value"]
-
-        speed, rotation = drivetrains.two_motor_drivetrain(l_motor, r_motor)
-        self.physics_controller.drive(speed, rotation, tm_diff)
