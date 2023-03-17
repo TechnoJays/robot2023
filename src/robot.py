@@ -10,9 +10,9 @@ logging.basicConfig(level=logging.INFO)
 
 
 class RetrojaysRobot(TimedCommandRobot):
-    SIM_SUBSYSTEMS_CONFIG_PATH = "configs/subsystems.ini"
-    SIM_JOYSTICK_CONFIG_PATH = "configs/joysticks.ini"
-    SIM_AUTONOMOUS_CONFIG_PATH = "configs/autonomous.ini"
+    SIM_SUBSYSTEMS_CONFIG_PATH = "./configs/subsystems.ini"
+    SIM_JOYSTICK_CONFIG_PATH = "./configs/joysticks.ini"
+    SIM_AUTONOMOUS_CONFIG_PATH = "./configs/autonomous.ini"
     _robot_controller: RobotController = None
 
     def autonomousInit(self):
@@ -51,7 +51,8 @@ class RetrojaysRobot(TimedCommandRobot):
         This function also checks if the robot is currently running as a simulation
         """
         if self.isSimulation():
-            self._robot_controller = RobotController(self, self.SIM_SUBSYSTEMS_CONFIG_PATH,
+            self._robot_controller = RobotController(self,
+                                                     self.SIM_SUBSYSTEMS_CONFIG_PATH,
                                                      self.SIM_JOYSTICK_CONFIG_PATH,
                                                      self.SIM_AUTONOMOUS_CONFIG_PATH)
         else:
