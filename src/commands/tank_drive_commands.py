@@ -2,9 +2,10 @@
 # Open Source Software; you can modify and / or share it under the terms of
 # the MIT license file in the root directory of this project
 import typing
+
 from commands2 import Command, Subsystem
 
-from oi import JoystickAxis, UserController, JoystickButtons, OI
+from oi import JoystickAxis, UserController, OI
 from subsystems.drivetrain import Drivetrain
 
 
@@ -40,13 +41,13 @@ class TankDrive(Command):
         """Called before the Command is run for the first time."""
         return Command.initialize(self)
 
-    def execute(self):
+    def execute(self) -> None:
         """Called repeatedly when this Command is scheduled to run"""
+
         slow: bool = self.oi.driver_controller.getLeftBumper()
         turbo: bool = self.oi.driver_controller.getRightBumper()
-        dpad_y: float = self.oi.get_axis(
-            UserController.DRIVER, JoystickAxis.DPADY
-        )
+
+        dpad_y: float = self.oi.get_axis(UserController.DRIVER, JoystickAxis.DPADY)
 
         modifier = self._drivetrain.default_scaling
 
@@ -58,10 +59,9 @@ class TankDrive(Command):
         if dpad_y != 0.0:
             self.drivetrain.arcade_drive(self._dpad_scaling * dpad_y, 0.0)
         else:
-            left_track: float = self.oi.driver_controller.getLeftY()
-            right_track: float = self.oi.driver_controller.getRightY()
-
-        self.drivetrain.tank_drive(left_track * modifier, right_track * modifier)
+            left_track = self.oi.driver_controller.getLeftY()
+            right_track = self.oi.driver_controller.getRightY()
+            self.drivetrain.tank_drive(left_track * modifier, right_track * modifier)
         return Command.execute(self)
 
     def isFinished(self) -> bool:

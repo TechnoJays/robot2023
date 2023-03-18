@@ -5,6 +5,7 @@ from configparser import ConfigParser
 
 import pytest
 from commands2 import Command
+from commands2._impl.button import CommandXboxController
 from wpilib.simulation import PWMSim
 
 import oi
@@ -76,6 +77,9 @@ def mock_oi():
             oi.UserController.DRIVER: driver_button_values,
             oi.UserController.SCORING: scoring_button_values,
         }
+
+        driver_controller = CommandXboxController(0)
+        scoring_controller = CommandXboxController(1)
 
         def set_mock_axis_value(self, controller, axis, value):
             self.axis_values[controller][axis] = value

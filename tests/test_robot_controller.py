@@ -1,14 +1,16 @@
+from pyfrc.tests import *
 from commands2 import TimedCommandRobot
 
 from robot_controller import RobotController
 
+SUBSYSTEMS_CONFIG_PATH = "../tests/test_configs/subsystems_default.ini"
+JOYSTICK_CONFIG_PATH = "../tests/test_configs/joysticks_default.ini"
+AUTONOMOUS_CONFIG_PATH = "../tests/test_configs/autonomous_default.ini"
+
 
 def test__init(robot: TimedCommandRobot):
-    # given: a robot controller
-    RobotController.SUBSYSTEMS_CONFIG_PATH = "../tests/test_configs/subsystems_default.ini"
-    RobotController.JOYSTICK_CONFIG_PATH = "../tests/test_configs/joysticks_default.ini"
-    RobotController.AUTONOMOUS_CONFIG_PATH = "../tests/test_configs/autonomous_default.ini.ini"
-    controller = RobotController(robot)
+    # given: a robot controller with valid config paths
+    controller = RobotController(robot, SUBSYSTEMS_CONFIG_PATH, JOYSTICK_CONFIG_PATH, AUTONOMOUS_CONFIG_PATH)
 
     # then: all the controllers configs should be initialized
     assert controller.subsystems_config is not None

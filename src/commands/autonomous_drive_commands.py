@@ -24,7 +24,6 @@ class MoveFromLine(CommandGroupBase):
         self._config = config
         self._load_config(config)
         self._initialize_commands(drivetrain)
-        print('move from line: drivetrain - ' + drivetrain)
         self._drivetrain = drivetrain
 
     def _load_config(self, parser: ConfigParser):

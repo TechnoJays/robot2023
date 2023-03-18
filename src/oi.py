@@ -82,7 +82,6 @@ class OI:
             self._controllers.append(self._init_joystick(i))
             self._dead_zones.append(self._init_dead_zone(i))
 
-        print(self._controllers)
         self._driver_controller = self._controllers[0]
         self._scoring_controller = self._controllers[1]
         self._auto_program_chooser: SendableChooser = SendableChooser()
@@ -96,13 +95,14 @@ class OI:
         config_section = OI.JOY_CONFIG_SECTION + str(driver)
         return self._config.getfloat(config_section, OI.DEAD_ZONE_KEY)
 
-    def get_auto_choice(self) -> CommandGroupBase:
+    def get_auto_choice(self) -> str:
         """
         Return the autonomous mode choice selected on the smart dashboard
-
-        TODO Challenges with _robot reference being `None` in `RobotController`
         """
-        return self.auto_chooser().getSelected()
+        if self._config.has_section("AUTONOMOUS"):
+            return self._config.get("AUTONOMOUS", "COMMAND")
+        else:
+            return "NONE"
 
     def get_position(self) -> int:
         """

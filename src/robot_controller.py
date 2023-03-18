@@ -29,23 +29,32 @@ class RobotController:
     JOYSTICK_CONFIG_PATH = "/home/lvuser/py/configs/joysticks.ini"
     AUTONOMOUS_CONFIG_PATH = "/home/lvuser/py/configs/autonomous.ini"
 
-    def __init__(self, robot: TimedCommandRobot) -> None:
+    def __init__(self,
+                 robot: TimedCommandRobot,
+                 subsystems_config: str = SUBSYSTEMS_CONFIG_PATH,
+                 joystick_config: str = JOYSTICK_CONFIG_PATH,
+                 auto_config: str = AUTONOMOUS_CONFIG_PATH
+                 ) -> None:
         self._robot: TimedCommandRobot = robot
-        self._init_config()
+        self._init_config(subsystems_config, joystick_config, auto_config)
         self._subsystems = self._init_subsystems()
 
-    def _init_config(self) -> None:
+    def _init_config(self,
+                     subsystems_config_path: str,
+                     joystick_config_path: str,
+                     autonomous_config_path: str
+                     ) -> None:
         """
         Initialize config parsers for subsystems, operator interface, and autonomous
         """
         self._subsystems_config = configparser.ConfigParser()
-        self._subsystems_config.read(self.SUBSYSTEMS_CONFIG_PATH)
+        self._subsystems_config.read(subsystems_config_path)
 
         self._joystick_config = configparser.ConfigParser()
-        self._joystick_config.read(self.JOYSTICK_CONFIG_PATH)
+        self._joystick_config.read(joystick_config_path)
 
         self._autonomous_config = configparser.ConfigParser()
-        self._autonomous_config.read(self.AUTONOMOUS_CONFIG_PATH)
+        self._autonomous_config.read(autonomous_config_path)
 
     def _init_subsystems(self) -> list[SubsystemBase]:
         """
@@ -84,7 +93,7 @@ class RobotController:
         self.arm.setDefaultCommand(
             ArmMove(
                 self.arm,
-                lambda: self.oi.get_axis(UserController.SCORING, JoystickAxis.LEFTY),
+                lambda: self.oi.scoring_controller.getLeftY(),
             )
         )
 
@@ -95,7 +104,7 @@ class RobotController:
         self.oi.scoring_controller.rightBumper().onTrue(Grab(self.grabber))
         self.oi.scoring_controller.leftBumper().onTrue(Release(self.grabber))
 
-    def get_auto_choice(self) -> CommandBase:
+    def get_auto_choice(self) -> str:
         return self._oi.get_auto_choice()
 
     def _setup_autonomous_smartdashboard(self,
@@ -103,11 +112,11 @@ class RobotController:
                                          autonomous_config: configparser.ConfigParser) -> SendableChooser:
         self._auto_program_chooser = SendableChooser()
         self._auto_program_chooser.setDefaultOption(
-            "Move From Line", MoveFromLine(drivetrain, autonomous_config)
+            "MoveFromLine", MoveFromLine(drivetrain, autonomous_config)
         )
         SmartDashboard.putData("Autonomous", self._auto_program_chooser)
         return self._auto_program_chooser
-    
+
     def update_sensors(self) -> None:
         SmartDashboard.putBoolean("0_Arm-05-RAW-Upper-Limit-Switch", self._arm.upper_limit_switch.get())
         SmartDashboard.putBoolean("0_Arm-05-RAW-Lower-Limit-Switch", self._arm.lower_limit_switch.get())

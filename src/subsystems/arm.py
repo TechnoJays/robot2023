@@ -42,7 +42,7 @@ class Arm(SubsystemBase):
             Arm.GENERAL_SECTION, Arm.ENABLED_KEY
         )
         self._init_components()
-        print("Arm initialized")
+        print("***Arm initialized***")
         super().__init__()
 
     def _init_components(self) -> None:
@@ -158,11 +158,15 @@ class Arm(SubsystemBase):
         SmartDashboard.putNumber(ARM_DASHBOARD_SLEW_RATE, self._slew_rate_of_change)
         SmartDashboard.putBoolean(ARM_DASHBOARD_UPPER_LIMIT, self._limit_value(self._upper_limit_switch))
         SmartDashboard.putBoolean(ARM_DASHBOARD_LOWER_LIMIT, self._limit_value(self._lower_limit_switch))
-    
+
     @property
     def upper_limit_switch(self) -> DigitalInput:
         return self._upper_limit_switch
-    
+
     @property
     def lower_limit_switch(self) -> DigitalInput:
         return self._lower_limit_switch
+
+    @property
+    def motor(self):
+        return self._motor
