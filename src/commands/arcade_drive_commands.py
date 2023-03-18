@@ -28,7 +28,7 @@ class DriveTime(CommandBase):
 
     def execute(self) -> None:
         """Called repeatedly when this Command is scheduled to run"""
-        self.drivetrain.arcade_drive(self._speed, 0.0, False)
+        self.drivetrain.tank_drive(1.0, 1.0)
         return Command.execute(self)
 
     def isFinished(self) -> bool:
