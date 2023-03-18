@@ -1,3 +1,4 @@
+from pyfrc.tests import *
 from commands2 import TimedCommandRobot
 
 from robot_controller import RobotController

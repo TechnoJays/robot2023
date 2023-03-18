@@ -93,7 +93,7 @@ class RobotController:
         self.arm.setDefaultCommand(
             ArmMove(
                 self.arm,
-                lambda: self.oi.get_axis(UserController.SCORING, JoystickAxis.LEFTY),
+                lambda: self.oi.scoring_controller.getLeftY(),
             )
         )
 
@@ -104,7 +104,7 @@ class RobotController:
         self.oi.scoring_controller.rightBumper().onTrue(Grab(self.grabber))
         self.oi.scoring_controller.leftBumper().onTrue(Release(self.grabber))
 
-    def get_auto_choice(self) -> CommandBase:
+    def get_auto_choice(self) -> str:
         return self._oi.get_auto_choice()
 
     def _setup_autonomous_smartdashboard(self,
@@ -112,7 +112,7 @@ class RobotController:
                                          autonomous_config: configparser.ConfigParser) -> SendableChooser:
         self._auto_program_chooser = SendableChooser()
         self._auto_program_chooser.setDefaultOption(
-            "Move From Line", MoveFromLine(drivetrain, autonomous_config)
+            "MoveFromLine", MoveFromLine(drivetrain, autonomous_config)
         )
         SmartDashboard.putData("Autonomous", self._auto_program_chooser)
         return self._auto_program_chooser

@@ -95,13 +95,14 @@ class OI:
         config_section = OI.JOY_CONFIG_SECTION + str(driver)
         return self._config.getfloat(config_section, OI.DEAD_ZONE_KEY)
 
-    def get_auto_choice(self) -> CommandGroupBase:
+    def get_auto_choice(self) -> str:
         """
         Return the autonomous mode choice selected on the smart dashboard
-
-        TODO Challenges with _robot reference being `None` in `RobotController`
         """
-        return self.auto_chooser().getSelected()
+        if self._config.has_section("AUTONOMOUS"):
+            return self._config.get("AUTONOMOUS", "COMMAND")
+        else:
+            return "NONE"
 
     def get_position(self) -> int:
         """
